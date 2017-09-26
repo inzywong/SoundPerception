@@ -373,10 +373,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3499ef7c3a40f941a4c24086dcd0952, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  diskColor: {r: 0.04617214, g: 0.12245832, b: 0.89705884, a: 1}
+  diskColor: {r: 0.83823526, g: 0.8527383, b: 1, a: 1}
   disc1: {fileID: 1001807368}
   disc2: {fileID: 1749551034}
-  speed: 3.7
+  speed: 14.1
 --- !u!4 &1697533931
 Transform:
   m_ObjectHideFlags: 0

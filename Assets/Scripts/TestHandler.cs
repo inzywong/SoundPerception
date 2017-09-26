@@ -5,9 +5,12 @@ using UnityEngine;
 public class TestHandler : MonoBehaviour
 {
   // Use this for initialization
+  public Color backgroundColor;
   public Color diskColor;
+  public Color xColor;
   public GameObject disc1;
   public GameObject disc2;
+  public GameObject xLookAt;
   [Range(-20.0f, 30.0f)]
   public float speed;
 
@@ -20,11 +23,10 @@ public class TestHandler : MonoBehaviour
 
   void Awake()
   {
-    //float scale = 0.5f;//0.5 is the scale of the object, the object is scalled down.
     audioS = GetComponent<AudioSource>();
     trans1 = disc1.GetComponent<Transform>();
     trans2 = disc2.GetComponent<Transform>();
-    scale = 0.5;
+    scale = disc1.GetComponent<Transform>().localScale.x; // The scale of the disks. Assuming that both have the same scale
     played = false;
   }
   void Start()
@@ -32,6 +34,8 @@ public class TestHandler : MonoBehaviour
     r = (disc1.GetComponent<CircleCollider2D>().radius) * scale;
     disc1.GetComponent<SpriteRenderer>().color = diskColor;
     disc2.GetComponent<SpriteRenderer>().color = diskColor;
+    xLookAt.GetComponent<SpriteRenderer>().color = xColor;
+    Camera.main.backgroundColor = backgroundColor;
   }
 
   // Update is called once per frame
@@ -51,7 +55,4 @@ public class TestHandler : MonoBehaviour
     }
 
   }
-
-
-
 }
