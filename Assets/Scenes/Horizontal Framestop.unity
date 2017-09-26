@@ -840,6 +840,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundOffset: 150
   waitTime: 1
+  pauseTime: 0
   backgroundColor: {r: 0.47058827, g: 0.47058827, b: 0.47058827, a: 1}
   diskColorL: {r: 1, g: 1, b: 1, a: 1}
   diskColorR: {r: 1, g: 1, b: 1, a: 1}

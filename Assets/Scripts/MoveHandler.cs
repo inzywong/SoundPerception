@@ -35,7 +35,9 @@ public class MoveHandler : MonoBehaviour
   private float distanceOffset;
   private float triggerDist;
   private float journeyLength;
-  private bool played;
+  private bool hasPlayedSound;
+  private float pauseTime;
+  private bool hasPausedTime;
   private float error; // Apply error since dt isn't infinitly small
 
   void Awake()
@@ -75,14 +77,17 @@ public class MoveHandler : MonoBehaviour
     Camera.main.backgroundColor = backgroundColor;
   }
 
-  public void SetTest(string soundTiming, float soundOffset)
+  public void SetTest(string soundTiming, float soundOffset, float pauseTime)
   {
     this.soundTiming = soundTiming;
     this.soundOffset = soundOffset;
+    this.pauseTime = pauseTime;
     diskTransL.position = startLeft;
     diskTransR.position = startRight;
     startTime = Time.time;
-    played = false;
+    hasPlayedSound = false;
+    hasPausedTime = pauseTime == 0;
+
     journeyLength = Vector3.Distance(diskTransL.position, diskTransR.position);
 
     // This value is used for playing the sound before coincidence. Multiply with 0.001 to convert from ms to s.
@@ -114,10 +119,17 @@ public class MoveHandler : MonoBehaviour
     // Distance between the disks
     float dist = Vector3.Distance(diskTransL.position, diskTransR.position);
 
-    // Check if we are within the trigger distance
-    if (dist <= triggerDist && !played)
+    if (dist <= 0 + error && !hasPausedTime)
     {
-      played = true;
+      Debug.Log("Pause");
+      StartCoroutine(FramePause());
+      hasPausedTime = true;
+    }
+
+    // Check if we are within the trigger distance
+    if (dist <= triggerDist && !hasPlayedSound)
+    {
+      hasPlayedSound = true;
       // If we should play after coincidence, add delay to sound. 
       if (soundTiming == "after")
       {
@@ -126,7 +138,18 @@ public class MoveHandler : MonoBehaviour
       }
       audioS.Play();
     }
-
     return fracJourney >= 1;
+  }
+
+  // Pause the movement for the given time
+  IEnumerator FramePause()
+  {
+    Time.timeScale = 0f;
+    float pauseEndTime = Time.realtimeSinceStartup + pauseTime;
+    while (Time.realtimeSinceStartup < pauseEndTime)
+    {
+      yield return 0;
+    }
+    Time.timeScale = 1;
   }
 }

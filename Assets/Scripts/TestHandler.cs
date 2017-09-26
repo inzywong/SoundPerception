@@ -8,10 +8,12 @@ public class TestHandler : MonoBehaviour
 {
   [Header("Variables")]
   // public int numberOfRuns = 1;
-  [Tooltip("Sound offset in ms. The delay used in the before and after timings.")]
+  [Tooltip("Sound offset [ms]. The delay used in the before and after timings.")]
   public float soundOffset = 150f;
-  [Tooltip("The time between each test in seconds")]
+  [Tooltip("The time between each test [s]")]
   public float waitTime = 2;
+  [Tooltip("Time to pause at the moment of coincidence [ms]")]
+  public float pauseTime = 0f;
   [Header("Colors")]
   public Color backgroundColor;
   public Color diskColorL;
@@ -62,7 +64,7 @@ public class TestHandler : MonoBehaviour
       return;
     string newTest = testOrder[0];
     testOrder.RemoveAt(0);
-    moveHandler.SetTest(newTest, soundOffset);
+    moveHandler.SetTest(newTest, soundOffset, pauseTime * 0.001f);
     doneWithTest = false;
     Debug.Log("Starting Test: " + newTest);
   }
