@@ -10,17 +10,7 @@ public class MoveHandler : MonoBehaviour
   public GameObject discR;
   public GameObject xLookAt;
   [Header("Variables")]
-  [Range(0f, 20.0f)]
-  public float speed;
-  public enum SoundTiming
-  {
-    at,
-    before,
-    after
-  }
-  public SoundTiming soundTiming;
-  [Tooltip("Sound offset in ms. The delay used in the before and after timings.")]
-  public float soundOffset = 150f;
+  public float speed = 20f;
   public enum Sounds
   {
     sound1,
@@ -39,14 +29,16 @@ public class MoveHandler : MonoBehaviour
   private Transform diskTransL;
   private Transform diskTransR;
   private AudioSource audioS;
-  private bool played;
   private Vector3 startLeft;
   private Vector3 startRight;
-  private float journeyLength;
   private float startTime;
+  private string soundTiming; // "at", "before" or "after"
+  private float soundOffset;
+  private float distanceOffset;
+  private float triggerDist;
+  private float journeyLength;
+  private bool played;
   private float error; // Apply error since dt isn't infinitly small
-  float distanceOffset;
-  float triggerDist;
 
   void Awake()
   {
@@ -59,9 +51,7 @@ public class MoveHandler : MonoBehaviour
   {
     startLeft = diskTransL.position;
     startRight = diskTransR.position;
-    Initialize();
     error = 0.1f; // Tested by pausing at coincidense and checking if disks overlap
-    journeyLength = Vector3.Distance(diskTransL.position, diskTransR.position);
 
     // Attach the selected sound to the audiosource.
     switch (sound)
@@ -76,22 +66,6 @@ public class MoveHandler : MonoBehaviour
         audioS.clip = sound3;
         break;
     }
-
-    // This value is used for playing the sound before coincidence. Multiply with 0.001 to convert from ms to s.
-    distanceOffset = speed * (soundOffset * 0.001f) * 2; // Times 2 since they are moving towards each other.
-    triggerDist = 0;
-
-    // Set the distance offset depending on our choice
-    switch (soundTiming)
-    {
-      case SoundTiming.at:
-      case SoundTiming.after:
-        triggerDist = 0 + error;
-        break;
-      case SoundTiming.before:
-        triggerDist = distanceOffset;
-        break;
-    }
   }
 
   public void SetColors(Color backgroundColor, Color diskColorL,
@@ -103,15 +77,34 @@ public class MoveHandler : MonoBehaviour
     Camera.main.backgroundColor = backgroundColor;
   }
 
-  public void Initialize()
+  public void SetTest(string soundTiming, float soundOffset)
   {
+    this.soundTiming = soundTiming;
+    this.soundOffset = soundOffset;
     diskTransL.position = startLeft;
     diskTransR.position = startRight;
     startTime = Time.time;
     played = false;
+    journeyLength = Vector3.Distance(diskTransL.position, diskTransR.position);
+
+    // This value is used for playing the sound before coincidence. Multiply with 0.001 to convert from ms to s.
+    distanceOffset = speed * (soundOffset * 0.001f) * 2; // Times 2 since they are moving towards each other.
+    triggerDist = 0;
+
+    // Set the distance offset depending on our choice
+    switch (soundTiming)
+    {
+      case "at":
+      case "after":
+        triggerDist = 0 + error;
+        break;
+      case "before":
+        triggerDist = distanceOffset;
+        break;
+    }
   }
 
-  public void MoveDisks()
+  public bool MoveDisks()
   {
     float distCovered = (Time.time - startTime) * speed; // The distance traveled
     float fracJourney = distCovered / journeyLength;  // How much of the total length has been traveled. 
@@ -123,16 +116,19 @@ public class MoveHandler : MonoBehaviour
     // Distance between the disks
     float dist = Vector3.Distance(diskTransL.position, diskTransR.position);
 
+    // Check if we are within the trigger distance
     if (dist <= triggerDist && !played)
     {
       played = true;
       // If we should play after coincidence, add delay to sound. 
-      if (soundTiming == SoundTiming.after)
+      if (soundTiming == "after")
       {
-        audioS.PlayDelayed(0.15f);
-        return;
+        audioS.PlayDelayed(soundOffset * 0.001f);
+        return false;
       }
       audioS.Play();
     }
+
+    return fracJourney >= 1;
   }
 }
