@@ -838,14 +838,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3499ef7c3a40f941a4c24086dcd0952, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfRuns: 1
   soundOffset: 150
-  waitTime: 2
+  waitTime: 1
   backgroundColor: {r: 0.47058827, g: 0.47058827, b: 0.47058827, a: 1}
   diskColorL: {r: 1, g: 1, b: 1, a: 1}
   diskColorR: {r: 1, g: 1, b: 1, a: 1}
   xColor: {r: 0, g: 0, b: 0, a: 1}
-  nextButton: {fileID: 742640261}
 --- !u!1 &1749551034
 GameObject:
   m_ObjectHideFlags: 0

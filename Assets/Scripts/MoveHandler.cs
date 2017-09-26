@@ -24,8 +24,6 @@ public class MoveHandler : MonoBehaviour
   public AudioClip sound2;
   public AudioClip sound3;
 
-  // // private double scale; // Disk scale
-  // private double r; // Disk radius
   private Transform diskTransL;
   private Transform diskTransR;
   private AudioSource audioS;
