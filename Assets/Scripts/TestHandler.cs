@@ -5,35 +5,38 @@ using UnityEngine;
 public class TestHandler : MonoBehaviour
 {
   // Use this for initialization
+  [Header("Colors")]
   public Color backgroundColor;
   public Color diskColor;
   public Color xColor;
-  public GameObject disc1;
-  public GameObject disc2;
+  [Header("Objects")]
+  public GameObject discL;
+  public GameObject discR;
   public GameObject xLookAt;
+  [Header("Variables")]
   [Range(-20.0f, 30.0f)]
   public float speed;
 
-  private double scale;
-  private double r;
-  private Transform trans1;
-  private Transform trans2;
-  private bool played;
+  private double scale; // Disk scale
+  private double r; // Disk radius
+  private Transform diskTransL;
+  private Transform diskTransR;
+  private bool played; // If the sound has been played
   private AudioSource audioS;
 
   void Awake()
   {
     audioS = GetComponent<AudioSource>();
-    trans1 = disc1.GetComponent<Transform>();
-    trans2 = disc2.GetComponent<Transform>();
-    scale = disc1.GetComponent<Transform>().localScale.x; // The scale of the disks. Assuming that both have the same scale
+    diskTransL = discL.GetComponent<Transform>();
+    diskTransR = discR.GetComponent<Transform>();
+    scale = discL.GetComponent<Transform>().localScale.x; // The scale of the disks. Assuming that both have the same scale
     played = false;
   }
   void Start()
   {
-    r = (disc1.GetComponent<CircleCollider2D>().radius) * scale;
-    disc1.GetComponent<SpriteRenderer>().color = diskColor;
-    disc2.GetComponent<SpriteRenderer>().color = diskColor;
+    r = (discL.GetComponent<CircleCollider2D>().radius) * scale;
+    discL.GetComponent<SpriteRenderer>().color = diskColor;
+    discR.GetComponent<SpriteRenderer>().color = diskColor;
     xLookAt.GetComponent<SpriteRenderer>().color = xColor;
     Camera.main.backgroundColor = backgroundColor;
   }
@@ -41,15 +44,15 @@ public class TestHandler : MonoBehaviour
   // Update is called once per frame
   void Update()
   {
-    if (trans1.position.x + r < 50 && trans1.position.x - r > -50)
+    if (diskTransL.position.x + r < 50 && diskTransL.position.x - r > -50)
     {
-      trans1.Translate(Vector2.right * Time.deltaTime * speed);
-      trans2.Translate(Vector2.left * Time.deltaTime * speed);
-      //Debug.DrawLine(trans1.position, new Vector3((trans1.position.x+r), 0, 0), Color.red);
-      if ((trans1.position.x + r) >= (trans2.position.x - r) && !played)
+      diskTransL.Translate(Vector2.right * Time.deltaTime * speed);
+      diskTransR.Translate(Vector2.left * Time.deltaTime * speed);
+      //Debug.DrawLine(diskTransL.position, new Vector3((diskTransL.position.x+r), 0, 0), Color.red);
+      if ((diskTransL.position.x + r) >= (diskTransR.position.x - r) && !played)
       {
         audioS.Play();
-        Debug.Log("intersection point?: " + trans1.position.x + r);
+        Debug.Log("intersection point?: " + diskTransL.position.x + r);
         played = true;
       }
     }
