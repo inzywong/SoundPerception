@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class TestHandler : MonoBehaviour
 {
   // Use this for initialization
@@ -17,41 +18,74 @@ public class TestHandler : MonoBehaviour
   [Header("Variables")]
   [Range(0f, 20.0f)]
   public float speed;
+  public enum SoundTiming
+  {
+    at,
+    before,
+    after
+  }
+  public SoundTiming soundTiming;
+  [Tooltip("Sound offset in ms")]
+  public float soundOffset = 150f;
+  public enum Sounds
+  {
+    sound1,
+    sound2,
+    sound3
+  }
+  public Sounds sound;
 
-  private double scale; // Disk scale
+  [Header("Sounds")]
+  public AudioClip sound1;
+  public AudioClip sound2;
+  public AudioClip sound3;
+
+  // // private double scale; // Disk scale
   // private double r; // Disk radius
   private Transform diskTransL;
   private Transform diskTransR;
-  private bool played; // If the sound has been played
   private AudioSource audioS;
+  private bool played;
   private Vector3 startLeft;
   private Vector3 startRight;
   private float journeyLength;
   private float startTime;
-
-  private float error;
+  private float error; // Apply error since dt isn't infinitly small
 
   void Awake()
   {
     audioS = GetComponent<AudioSource>();
     diskTransL = discL.GetComponent<Transform>();
     diskTransR = discR.GetComponent<Transform>();
-    scale = discL.GetComponent<Transform>().localScale.x; // The scale of the disks. Assuming that both have the same scale
+    // // // // scale = discL.GetComponent<Transform>().localScale.x; // The scale of the disks. Assuming that both have the same scale
   }
 
   void Start()
   {
-    played = false;
     startLeft = diskTransL.position;
     startRight = diskTransR.position;
     startTime = Time.time;
-    error = 0.1f;
-    // r = (discL.GetComponent<CircleCollider2D>().radius) * scale;
+    error = 0.1f; // Tested by pausing at coincidense and checking if disks overlap
+    played = false;
     discL.GetComponent<SpriteRenderer>().color = diskColorL;
     discR.GetComponent<SpriteRenderer>().color = diskColorR;
     xLookAt.GetComponent<SpriteRenderer>().color = xColor;
     Camera.main.backgroundColor = backgroundColor;
     journeyLength = Vector3.Distance(diskTransL.position, diskTransR.position);
+
+    // Attach the selected sound to the audiosource.
+    switch (sound)
+    {
+      case Sounds.sound1:
+        audioS.clip = sound1;
+        break;
+      case Sounds.sound2:
+        audioS.clip = sound2;
+        break;
+      case Sounds.sound3:
+        audioS.clip = sound3;
+        break;
+    }
   }
 
   // Update is called once per frame
@@ -65,24 +99,32 @@ public class TestHandler : MonoBehaviour
     diskTransR.position = Vector3.Lerp(startRight, startLeft, fracJourney);
 
     float dist = Vector3.Distance(diskTransL.position, diskTransR.position); // Distance between the disks
-    float distanceDelay = speed * 0.15f; // Distance traveled at 150ms
-    // Debug.Log(dist);
-    if ((Mathf.Abs(dist) <= 0 + error) && !played)
+    // This value is used for playing the sound before coincidence. Multiply with 0.001 to convert from ms to s.
+    float distanceOffset = speed * (soundOffset * 0.001f) * 2; // Times 2 since they are moving towards each other.
+    float triggerDist = 0;
+
+    // Set the distance offset depending on our choice
+    switch (soundTiming)
+    {
+      case SoundTiming.at:
+      case SoundTiming.after:
+        triggerDist = 0 + error;
+        break;
+      case SoundTiming.before:
+        triggerDist = distanceOffset;
+        break;
+    }
+
+    if (dist <= triggerDist && !played)
     {
       played = true;
-      // Time.timeScale = 0;
+      // If we should play after coincidence, add delay to sound. 
+      if (soundTiming == SoundTiming.after)
+      {
+        audioS.PlayDelayed(0.15f);
+        return;
+      }
       audioS.Play();
-      Debug.Log("Distance from each other: " + dist);
-      Debug.Log("Position DiskL: " + diskTransL.position);
-      Debug.Log("Position DiskR: " + diskTransR.position);
     }
   }
 }
-
-// if (diskTransL.position.x + r < 50 && diskTransL.position.x - r > -50 && !played)
-// {
-// diskTransL.Translate(Vector2.right * Time.deltaTime * speed);
-// diskTransR.Translate(Vector2.left * Time.deltaTime * speed);
-//Debug.DrawLine(diskTransL.position, new Vector3((diskTransL.position.x+r), 0, 0), Color.red);
-//if ((diskTransL.position.x + r) >= (diskTransR.position.x - r) && !played)
-
