@@ -10,7 +10,7 @@ public GameObject disc1;
 public GameObject disc2;
 public Transform trans1;
 public Transform trans2;
-public double r;
+protected double r;
 private double scale;
 bool played = false;
 private AudioSource audioS;
