@@ -1,7 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using System.IO;
 using UnityEngine;
 
 public class FrameStopTest : MonoBehaviour
@@ -38,7 +36,7 @@ public class FrameStopTest : MonoBehaviour
 
   IEnumerator RunTest()
   {
-    while (testOrder.Count != 0)
+    while (testOrder.Count != 8)
     {
       // Start the next test
       List<string> newTest = testOrder[0];

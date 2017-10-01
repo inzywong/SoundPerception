@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Text;
+using System.IO;
 
 [RequireComponent(typeof(MoveHandler))]
 public class TestHandler : MonoBehaviour
@@ -18,8 +20,9 @@ public class TestHandler : MonoBehaviour
   [Header("UI components")]
   public GameObject theCanvas;
   private FrameStopTest frameStopTest;
+  [Header("File path for saving results")]
+  public string @filePath;
 
-  private List<string[]> results;
 
   void Awake()
   {
@@ -40,16 +43,24 @@ public class TestHandler : MonoBehaviour
 
   IEnumerator RunTest1()
   {
+    List<string[]> results = new List<string[]>();
     yield return StartCoroutine(frameStopTest.StartTest(value => results = value));
+    SaveResults(results);
 
-    for (int i = 0; i < results.Count; i++)
-    {
-      Debug.Log(results[i][0] + " " + results[i][1] + " " + results[i][2]);
-    }
     theCanvas.SetActive(true);
   }
 
-  void SaveResults() { }
+  void SaveResults(List<string[]> results)
+  {
+    StringBuilder sb = new StringBuilder();
+    sb.AppendLine("New Test1 entry");
+    for (int i = 0; i < results.Count; i++)
+    {
+      sb.AppendLine(string.Join(",", results[i]));
+    }
+    File.AppendAllText(filePath, sb.ToString());
+    Debug.Log("Data saved!");
+  }
 
   void SetColors()
   {
