@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text;
+using System.IO;
 using UnityEngine;
 
 public class FrameStopTest : MonoBehaviour
@@ -17,44 +19,68 @@ public class FrameStopTest : MonoBehaviour
   private MoveHandler moveHandler;
   private List<List<string>> testOrder = new List<List<string>>();
 
+  // private string[,] results;
+  private List<string[]> results = new List<string[]>();
+
   void Awake()
   {
     moveHandler = GetComponent<MoveHandler>();
   }
 
-  public IEnumerator StartTest()
+  public IEnumerator StartTest(System.Action<List<string[]>> result)
   {
     testOrder = RandomizeTests();
+
+    yield return new WaitForSeconds(waitTime);
     yield return StartCoroutine(RunTest());
+    result(results);
   }
 
   IEnumerator RunTest()
   {
-    while (!doneWithTest)
+    while (testOrder.Count != 0)
     {
-      doneWithTest = moveHandler.MoveDisks();
-      yield return null; // Has to return in order for unity to update frame
+      // Start the next test
+      List<string> newTest = testOrder[0];
+      testOrder.RemoveAt(0);
+      moveHandler.SetTest(newTest[0], soundOffset, float.Parse(newTest[1]) * 0.001f);
+      doneWithTest = false;
+      Debug.Log("Starting Test: " + newTest[0] + ". Frame pause: " + newTest[1]);
+
+      while (!doneWithTest)
+      {
+        doneWithTest = moveHandler.MoveDisks();
+        yield return null; // Has to return in order for unity to update frame
+      }
+
+      // Wait for user to answer
+      yield return StartCoroutine(UserAnswer(newTest));
     }
-    yield return StartCoroutine(StartNext());
   }
 
-  // Pause for given time and then continue with the next test
-  IEnumerator StartNext()
+  IEnumerator UserAnswer(List<string> newTest)
   {
-    if (testOrder.Count == 0) // All tests performed when 0
-      yield break;
+    bool hasAnswered = false;
+    string choice = "";
+    while (!hasAnswered)
+    {
+      if (Input.GetMouseButtonDown(0))
+      {
+        hasAnswered = true;
+        choice = "bounce";
+      }
+      if (Input.GetMouseButtonDown(1))
+      {
+        hasAnswered = true;
+        choice = "stream";
+      }
+      yield return null;
+    }
+    string[] answer = new string[] { newTest[0], newTest[1], choice };
 
-    // Here we can include wait for button press //
-    yield return new WaitForSeconds(waitTime);
+    results.Add(answer);
 
-    // Start the next test
-    List<string> newTest = testOrder[0];
-    testOrder.RemoveAt(0);
-    moveHandler.SetTest(newTest[0], soundOffset, float.Parse(newTest[1]) * 0.001f);
-    doneWithTest = false;
-    Debug.Log("Starting Test: " + newTest[0] + ". Frame pause: " + newTest[1]);
-
-    yield return StartCoroutine(RunTest());
+    yield return null;
   }
 
   // Gives a random order of "at", "before" and "after"

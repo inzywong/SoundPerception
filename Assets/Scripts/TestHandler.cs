@@ -19,6 +19,7 @@ public class TestHandler : MonoBehaviour
   public GameObject theCanvas;
   private FrameStopTest frameStopTest;
 
+  private List<string[]> results;
 
   void Awake()
   {
@@ -39,9 +40,16 @@ public class TestHandler : MonoBehaviour
 
   IEnumerator RunTest1()
   {
-    yield return StartCoroutine(frameStopTest.StartTest());
+    yield return StartCoroutine(frameStopTest.StartTest(value => results = value));
+
+    for (int i = 0; i < results.Count; i++)
+    {
+      Debug.Log(results[i][0] + " " + results[i][1] + " " + results[i][2]);
+    }
     theCanvas.SetActive(true);
   }
+
+  void SaveResults() { }
 
   void SetColors()
   {
