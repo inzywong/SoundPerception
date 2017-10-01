@@ -36,7 +36,7 @@ public class FrameStopTest : MonoBehaviour
 
   IEnumerator RunTest()
   {
-    while (testOrder.Count != 8)
+    while (testOrder.Count != 0)
     {
       // Start the next test
       List<string> newTest = testOrder[0];
