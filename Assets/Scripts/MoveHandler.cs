@@ -6,9 +6,8 @@ using UnityEngine;
 public class MoveHandler : MonoBehaviour
 {
   [Header("Objects")]
-  public GameObject discL;
-  public GameObject discR;
-  public GameObject xLookAt;
+  public Transform discTransL;
+  public Transform discTransR;
   [Header("Variables")]
   public float speed = 20f;
   public enum Sounds
@@ -24,8 +23,7 @@ public class MoveHandler : MonoBehaviour
   public AudioClip sound2;
   public AudioClip sound3;
 
-  private Transform discTransL;
-  private Transform discTransR;
+
   private AudioSource audioS;
   private Vector3 startLeft;
   private Vector3 startRight;
@@ -43,8 +41,6 @@ public class MoveHandler : MonoBehaviour
   void Awake()
   {
     audioS = GetComponent<AudioSource>();
-    discTransL = discL.GetComponent<Transform>();
-    discTransR = discR.GetComponent<Transform>();
   }
 
   void Start()
@@ -112,7 +108,7 @@ public class MoveHandler : MonoBehaviour
 
     if (dist <= 0 + error && !hasPausedTime)
     {
-      Debug.Log("Pause");
+      // Debug.Log("Pause");
       StartCoroutine(FramePause());
       hasPausedTime = true;
     }
@@ -130,13 +126,6 @@ public class MoveHandler : MonoBehaviour
       audioS.Play();
     }
     return fracJourney >= 1;
-  }
-
-  // Function for showing and hiding the disks
-  public void ShowDisks(bool status)
-  {
-    discL.SetActive(status);
-    discR.SetActive(status);
   }
 
   // Pause the movement for the given time

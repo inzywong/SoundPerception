@@ -727,9 +727,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dde6ea282b5dbd74bb76e3544d732360, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  discL: {fileID: 1001807368}
-  discR: {fileID: 1749551034}
-  xLookAt: {fileID: 1679522381}
+  discTransL: {fileID: 1001807370}
+  discTransR: {fileID: 1749551036}
   speed: 20
   sound: 0
   sound1: {fileID: 8300000, guid: df6d47c840ed50547bdd1a2bb882e8e9, type: 3}
@@ -859,8 +858,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundOffset: 150
-  waitTime: 2
-  pauseTime: 0
+  waitTime: 0.5
+  pauseTime1: 0
+  pauseTime2: 150
+  pauseTime3: 300
 --- !u!1 &1749551034
 GameObject:
   m_ObjectHideFlags: 0

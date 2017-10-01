@@ -11,13 +11,11 @@ public class FrameStopTest : MonoBehaviour
   [Tooltip("The time between each test [s]")]
   public float waitTime = 2;
   [Tooltip("Time to pause at the moment of coincidence [ms]")]
-  public float pauseTime = 0f;
+  public float pauseTime1, pauseTime2, pauseTime3;
 
-  private bool startTest = false;
   private bool doneWithTest = true;
-  private bool startNextTest = false;
   private MoveHandler moveHandler;
-  private List<string> testOrder = new List<string>();
+  private List<List<string>> testOrder = new List<List<string>>();
 
   void Awake()
   {
@@ -46,31 +44,57 @@ public class FrameStopTest : MonoBehaviour
     if (testOrder.Count == 0) // All tests performed when 0
       yield break;
 
+    // Here we can include wait for button press //
     yield return new WaitForSeconds(waitTime);
 
     // Start the next test
-    string newTest = testOrder[0];
+    List<string> newTest = testOrder[0];
     testOrder.RemoveAt(0);
-    moveHandler.SetTest(newTest, soundOffset, pauseTime * 0.001f);
+    moveHandler.SetTest(newTest[0], soundOffset, float.Parse(newTest[1]) * 0.001f);
     doneWithTest = false;
-    Debug.Log("Starting Test: " + newTest);
+    Debug.Log("Starting Test: " + newTest[0] + ". Frame pause: " + newTest[1]);
 
     yield return StartCoroutine(RunTest());
   }
 
   // Gives a random order of "at", "before" and "after"
   // TODO: include framestop
-  public List<string> RandomizeTests()
+  public List<List<string>> RandomizeTests()
   {
-    List<string> randomTest = new List<string>();
     List<string> tests = new List<string> { "at", "before", "after" };
-    while (tests.Count != 0)
+    List<List<string>> randomTests = Scramble(tests);
+    return randomTests;
+  }
+
+  // Not pretty but it works. Returns random order of the tests.
+  public List<List<string>> Scramble(List<string> original)
+  {
+    List<List<string>> almostScrambled = new List<List<string>>();
+
+    while (original.Count != 0)
     {
-      int randomIndex = Random.Range(0, tests.Count);
-      string val = tests[randomIndex];
-      tests.RemoveAt(randomIndex);
-      randomTest.Add(val);
+      int randomIndex = Random.Range(0, original.Count);
+      string timing = original[randomIndex];
+      original.RemoveAt(randomIndex);
+
+      // Create 3 different tests, one for each "frame" stop type.
+      List<string> first = new List<string> { timing, pauseTime1.ToString() };
+      List<string> second = new List<string> { timing, pauseTime2.ToString() };
+      List<string> third = new List<string> { timing, pauseTime3.ToString() };
+
+      almostScrambled.Add(first); almostScrambled.Add(second); almostScrambled.Add(third);
     }
-    return randomTest;
+
+    // Repeat once more to make it scrambled
+    List<List<string>> scrambled = new List<List<string>>();
+    while (almostScrambled.Count != 0)
+    {
+      int randomIndex = Random.Range(0, almostScrambled.Count);
+      List<string> temp = almostScrambled[randomIndex];
+      almostScrambled.RemoveAt(randomIndex);
+      scrambled.Add(temp);
+    }
+
+    return scrambled;
   }
 }
