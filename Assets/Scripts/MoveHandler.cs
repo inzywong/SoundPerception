@@ -24,8 +24,8 @@ public class MoveHandler : MonoBehaviour
   public AudioClip sound2;
   public AudioClip sound3;
 
-  private Transform diskTransL;
-  private Transform diskTransR;
+  private Transform discTransL;
+  private Transform discTransR;
   private AudioSource audioS;
   private Vector3 startLeft;
   private Vector3 startRight;
@@ -43,14 +43,14 @@ public class MoveHandler : MonoBehaviour
   void Awake()
   {
     audioS = GetComponent<AudioSource>();
-    diskTransL = discL.GetComponent<Transform>();
-    diskTransR = discR.GetComponent<Transform>();
+    discTransL = discL.GetComponent<Transform>();
+    discTransR = discR.GetComponent<Transform>();
   }
 
   void Start()
   {
-    startLeft = diskTransL.position;
-    startRight = diskTransR.position;
+    startLeft = discTransL.position;
+    startRight = discTransR.position;
     error = 0.1f; // Tested by pausing at coincidense and checking if disks overlap
 
     // Attach the selected sound to the audiosource.
@@ -68,27 +68,18 @@ public class MoveHandler : MonoBehaviour
     }
   }
 
-  public void SetColors(Color backgroundColor, Color diskColorL,
-    Color diskColorR, Color xColor)
-  {
-    discL.GetComponent<SpriteRenderer>().color = diskColorL;
-    discR.GetComponent<SpriteRenderer>().color = diskColorR;
-    xLookAt.GetComponent<SpriteRenderer>().color = xColor;
-    Camera.main.backgroundColor = backgroundColor;
-  }
-
   public void SetTest(string soundTiming, float soundOffset, float pauseTime)
   {
     this.soundTiming = soundTiming;
     this.soundOffset = soundOffset;
     this.pauseTime = pauseTime;
-    diskTransL.position = startLeft;
-    diskTransR.position = startRight;
+    discTransL.position = startLeft;
+    discTransR.position = startRight;
     startTime = Time.time;
     hasPlayedSound = false;
     hasPausedTime = pauseTime == 0;
 
-    journeyLength = Vector3.Distance(diskTransL.position, diskTransR.position);
+    journeyLength = Vector3.Distance(discTransL.position, discTransR.position);
 
     // This value is used for playing the sound before coincidence. Multiply with 0.001 to convert from ms to s.
     distanceOffset = speed * (soundOffset * 0.001f) * 2; // Times 2 since they are moving towards each other.
@@ -113,11 +104,11 @@ public class MoveHandler : MonoBehaviour
     float fracJourney = distCovered / journeyLength;  // How much of the total length has been traveled. 
 
     // Move the disks towards each other
-    diskTransL.position = Vector3.Lerp(startLeft, startRight, fracJourney);
-    diskTransR.position = Vector3.Lerp(startRight, startLeft, fracJourney);
+    discTransL.position = Vector3.Lerp(startLeft, startRight, fracJourney);
+    discTransR.position = Vector3.Lerp(startRight, startLeft, fracJourney);
 
     // Distance between the disks
-    float dist = Vector3.Distance(diskTransL.position, diskTransR.position);
+    float dist = Vector3.Distance(discTransL.position, discTransR.position);
 
     if (dist <= 0 + error && !hasPausedTime)
     {
@@ -139,6 +130,13 @@ public class MoveHandler : MonoBehaviour
       audioS.Play();
     }
     return fracJourney >= 1;
+  }
+
+  // Function for showing and hiding the disks
+  public void ShowDisks(bool status)
+  {
+    discL.SetActive(status);
+    discR.SetActive(status);
   }
 
   // Pause the movement for the given time
