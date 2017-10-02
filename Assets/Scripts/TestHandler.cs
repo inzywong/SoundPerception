@@ -20,7 +20,8 @@ public class TestHandler : MonoBehaviour
   [Header("UI components")]
   public GameObject theCanvas;
   private FrameStopTest frameStopTest;
-  [Header("File path for saving results")]
+  [Header("File name for saving data")]
+  [Tooltip("Recomended filetype is .csv. No path will default to project folder")]
   public string @filePath;
 
 

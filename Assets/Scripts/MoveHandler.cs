@@ -10,21 +10,21 @@ public class MoveHandler : MonoBehaviour
   public Transform discTransR;
   [Header("Variables")]
   public float speed = 20f;
-  public enum Sounds
-  {
-    sound1,
-    sound2,
-    sound3
-  }
-  public Sounds sound;
+  // public enum Sounds
+  // {
+  //   sound1,
+  //   sound2,
+  //   sound3
+  // }
+  // public Sounds sound;
 
-  [Header("Sounds")]
-  public AudioClip sound1;
-  public AudioClip sound2;
-  public AudioClip sound3;
-
+  // [Header("Sounds")]
+  // public AudioClip sound1;
+  // public AudioClip sound2;
+  // public AudioClip sound3;
 
   private AudioSource audioS;
+  private AudioClip bounceSound;
   private Vector3 startLeft;
   private Vector3 startRight;
   private float startTime;
@@ -50,25 +50,27 @@ public class MoveHandler : MonoBehaviour
     error = 0.1f; // Tested by pausing at coincidense and checking if disks overlap
 
     // Attach the selected sound to the audiosource.
-    switch (sound)
-    {
-      case Sounds.sound1:
-        audioS.clip = sound1;
-        break;
-      case Sounds.sound2:
-        audioS.clip = sound2;
-        break;
-      case Sounds.sound3:
-        audioS.clip = sound3;
-        break;
-    }
+    // switch (sound)
+    // {
+    //   case Sounds.sound1:
+    //     audioS.clip = sound1;
+    //     break;
+    //   case Sounds.sound2:
+    //     audioS.clip = sound2;
+    //     break;
+    //   case Sounds.sound3:
+    //     audioS.clip = sound3;
+    //     break;
+    // }
   }
 
-  public void SetTest(string soundTiming, float soundOffset, float pauseTime)
+  public void SetTest(string soundTiming, AudioClip bounceSound, float soundOffset, float pauseTime)
   {
     this.soundTiming = soundTiming;
     this.soundOffset = soundOffset;
     this.pauseTime = pauseTime;
+    this.bounceSound = bounceSound;
+    audioS.clip = this.bounceSound;
     discTransL.position = startLeft;
     discTransR.position = startRight;
     startTime = Time.time;

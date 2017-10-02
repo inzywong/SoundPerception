@@ -12,12 +12,12 @@ public class FrameStopTest : MonoBehaviour
   public float waitTime = 2;
   [Tooltip("Time to pause at the moment of coincidence [ms]")]
   public float pauseTime1, pauseTime2, pauseTime3;
+  [Header("Sound")]
+  public AudioClip bounceSound;
 
   private bool doneWithTest = true;
   private MoveHandler moveHandler;
   private List<List<string>> testOrder = new List<List<string>>();
-
-  // private string[,] results;
   private List<string[]> results = new List<string[]>();
 
   void Awake()
@@ -41,7 +41,8 @@ public class FrameStopTest : MonoBehaviour
       // Start the next test
       List<string> newTest = testOrder[0];
       testOrder.RemoveAt(0);
-      moveHandler.SetTest(newTest[0], soundOffset, float.Parse(newTest[1]) * 0.001f);
+      // newTest[0] = at, before or after. newTest[1] = coincidence pause time
+      moveHandler.SetTest(newTest[0], bounceSound, soundOffset, float.Parse(newTest[1]) * 0.001f);
       doneWithTest = false;
       Debug.Log("Starting Test: " + newTest[0] + ". Frame pause: " + newTest[1]);
 
