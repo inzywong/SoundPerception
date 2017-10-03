@@ -19,42 +19,59 @@ public class TestHandler : MonoBehaviour
   public GameObject xLookAt;
   [Header("UI components")]
   public GameObject theCanvas;
-  private FrameStopTest frameStopTest;
   [Header("File name for saving data")]
   [Tooltip("Recomended filetype is .csv. No path will default to project folder")]
-  public string @filePath;
+  public string filePath = "gathered_data.csv";
 
+  private FrameStopTest frameStopTest;
+  private DifferentSoundTest diffSoundTest;
 
   void Awake()
   {
     frameStopTest = GetComponent<FrameStopTest>();
+    diffSoundTest = GetComponent<DifferentSoundTest>();
   }
 
-  // Use this for initialization
   void Start()
   {
     SetColors();
   }
 
+  // Start test one. Called from a button in the scene
   public void StartTest1()
   {
     StartCoroutine(RunTest1());
     theCanvas.SetActive(false);
   }
-
   IEnumerator RunTest1()
   {
     List<string[]> results = new List<string[]>();
     yield return StartCoroutine(frameStopTest.StartTest(value => results = value));
-    SaveResults(results);
+    SaveResults(results, "New Test 1 (frame/time stop)");
 
     theCanvas.SetActive(true);
   }
 
-  void SaveResults(List<string[]> results)
+  // Start test two. Called from a button in the scene
+  public void StartTest2()
+  {
+    StartCoroutine(RunTest2());
+    theCanvas.SetActive(false);
+  }
+  IEnumerator RunTest2()
+  {
+    List<string[]> results = new List<string[]>();
+    yield return StartCoroutine(diffSoundTest.StartTest(value => results = value));
+    SaveResults(results, "New Test 2 (different sounds)");
+
+    theCanvas.SetActive(true);
+  }
+
+  // Save the results to a file
+  void SaveResults(List<string[]> results, string title)
   {
     StringBuilder sb = new StringBuilder();
-    sb.AppendLine("New Test1 entry");
+    sb.AppendLine(title);
     for (int i = 0; i < results.Count; i++)
     {
       sb.AppendLine(string.Join(",", results[i]));
