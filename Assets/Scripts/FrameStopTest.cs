@@ -11,7 +11,8 @@ public class FrameStopTest : MonoBehaviour
   [Tooltip("The time between each test [s]")]
   public float waitTime = 2;
   [Tooltip("Time to pause at the moment of coincidence [ms]")]
-  public float pauseTime1, pauseTime2, pauseTime3;
+  // public float pauseTime1, pauseTime2, pauseTime3;
+  public float[] pauseTime;
   [Header("Sound")]
   public AudioClip bounceSound;
 
@@ -103,11 +104,16 @@ public class FrameStopTest : MonoBehaviour
       original.RemoveAt(randomIndex);
 
       // Create 3 different tests, one for each "frame" stop type.
-      List<string> first = new List<string> { timing, pauseTime1.ToString() };
-      List<string> second = new List<string> { timing, pauseTime2.ToString() };
-      List<string> third = new List<string> { timing, pauseTime3.ToString() };
+      for (int i = 0; i < pauseTime.Length; i++)
+      {
+        List<string> pauseLength = new List<string> { timing, pauseTime[i].ToString() };
+        almostScrambled.Add(pauseLength);
+      }
 
-      almostScrambled.Add(first); almostScrambled.Add(second); almostScrambled.Add(third);
+      // List<string> second = new List<string> { timing, pauseTime2.ToString() };
+      // List<string> third = new List<string> { timing, pauseTime3.ToString() };
+
+      // almostScrambled.Add(first); almostScrambled.Add(second); almostScrambled.Add(third);
     }
 
     // Repeat once more to make it scrambled
