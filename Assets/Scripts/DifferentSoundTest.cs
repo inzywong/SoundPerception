@@ -42,8 +42,8 @@ public class DifferentSoundTest : MonoBehaviour
       // Start the next test
       List<string> newTest = testOrder[0];
       testOrder.RemoveAt(0);
-      // newTest[0] = at, before or after. newTest[1] = coincidence pause time
-      int soundIndex = Int32.Parse(newTest[1]);
+      // newTest[0] = at, before or after. newTest[1] = index of sound to use
+      int soundIndex = Int32.Parse(newTest[1]); // convert string to int
       moveHandler.SetTest(newTest[0], bounceSounds[soundIndex], soundOffset, float.Parse(newTest[1]) * 0.001f);
       doneWithTest = false;
       Debug.Log("Starting Test: " + newTest[0] + ". Sound nr: " + newTest[1]);
