@@ -35,8 +35,8 @@ public class MoveHandler : MonoBehaviour
   public float gravity = 1f;
   public Vector3 centerPos = new Vector3(0f, 0f, 0f);
   public float rPendulum;
-  public float alpha = Mathf.PI / 2f;
-  public float alphaVel = 0;
+  public float alpha;
+  public float alphaVel;
   public float alphaAcc;
   public float beta;
   public float betaVel;
@@ -98,7 +98,7 @@ public class MoveHandler : MonoBehaviour
       journeyLength = Vector3.Distance(startRight, endRight);
       float halfD = journeyLength / 2;
       float timeToHalfD = halfD / speed;
-      // Need seperate for this since we freeze time at coincidense. 
+      // Need seperate for this since we freeze time at coincidense.
       float distanceForBefore = speed * (timeToHalfD - (soundOffset * 0.001f));
       // Set the distance offset depending on our choice
       switch (soundTiming)
@@ -119,6 +119,11 @@ public class MoveHandler : MonoBehaviour
       journeyLength = Vector3.Distance(discTransL.position, discTransR.position) * Mathf.PI / 2f;
       endLeft = new Vector3(startRight.x, startRight.y);
       endRight = new Vector3(startLeft.x, startLeft.y);
+      alpha = startAlpha;
+      beta = startBeta;
+      alphaVel = 0;
+      betaVel = 0;
+
 
       switch (soundTiming)
       {
