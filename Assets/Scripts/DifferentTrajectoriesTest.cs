@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DifferentTrajectoriesTest : MonoBehaviour {
+public class DifferentTrajectoriesTest : MonoBehaviour
+{
 
-	[Header("Variables")]
+  [Header("Variables")]
   // public int numberOfRuns = 1;
   [Tooltip("Sound offset [ms]. The delay used in the before and after timings.")]
   public float soundOffset = 150f;
@@ -20,7 +21,7 @@ public class DifferentTrajectoriesTest : MonoBehaviour {
   private MoveHandler moveHandler;
   private List<List<string>> testOrder = new List<List<string>>();
   private List<string[]> results = new List<string[]>();
-  private string[] trajectories = new string[] {"Cross", "Pendulum"}; // 1 = cross, 2 = pendulum
+  private string[] trajectories = new string[] { "Cross", "Pendulum" }; // 1 = cross, 2 = pendulum
 
   void Awake()
   {
@@ -45,10 +46,10 @@ public class DifferentTrajectoriesTest : MonoBehaviour {
       testOrder.RemoveAt(0);
       // newTest[0] = at, before or after. newTest[1] = index of sound to use
       moveHandler.SetTest(newTest[0],
-				bounceSound,
-				soundOffset,
-				pauseTime * 0.001f,
-				newTest[1]); // newTest[1] = which trajectory
+        bounceSound,
+        soundOffset,
+        pauseTime * 0.001f,
+        newTest[1]); // newTest[1] = which trajectory
       doneWithTest = false;
       Debug.Log("Starting Test: " + newTest[0] + ". Trajectory nr: " + newTest[1]);
 
@@ -83,12 +84,12 @@ public class DifferentTrajectoriesTest : MonoBehaviour {
     }
 
     string[] answer = new string[5];
-    if(newTest[0] == "before") answer[0] = "0";
-    if(newTest[0] == "at") answer[0] = "1";
-    if(newTest[0] == "after") answer[0] = "2";
-		answer[1] = answer[2] = "00";
-		answer[3] = newTest[1];
-		answer[4] = choice;
+    if (newTest[0] == "before") answer[0] = "0";
+    if (newTest[0] == "at") answer[0] = "1";
+    if (newTest[0] == "after") answer[0] = "2";
+    answer[1] = answer[2] = "00";
+    answer[3] = newTest[1];
+    answer[4] = choice;
 
     results.Add(answer);
     yield return null;
