@@ -25,11 +25,13 @@ public class TestHandler : MonoBehaviour
 
   private FrameStopTest frameStopTest;
   private DifferentSoundTest diffSoundTest;
+  private DifferentTrajectoriesTest diffTrajTest;
 
   void Awake()
   {
     frameStopTest = GetComponent<FrameStopTest>();
     diffSoundTest = GetComponent<DifferentSoundTest>();
+    diffTrajTest = GetComponent<DifferentTrajectoriesTest>();
   }
 
   void Start()
@@ -66,6 +68,21 @@ public class TestHandler : MonoBehaviour
 
     theCanvas.SetActive(true);
   }
+
+  public void StartTest3()
+  {
+    StartCoroutine(RunTest3());
+    theCanvas.SetActive(false);
+  }
+  IEnumerator RunTest3()
+  {
+    List<string[]> results = new List<string[]>();
+    yield return StartCoroutine(diffTrajTest.StartTest(value => results = value));
+    SaveResults(results, "");
+
+    theCanvas.SetActive(true);
+  }
+
 
   // Save the results to a file
   void SaveResults(List<string[]> results, string title)

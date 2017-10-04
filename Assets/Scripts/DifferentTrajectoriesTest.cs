@@ -44,18 +44,17 @@ public class DifferentTrajectoriesTest : MonoBehaviour {
       List<string> newTest = testOrder[0];
       testOrder.RemoveAt(0);
       // newTest[0] = at, before or after. newTest[1] = index of sound to use
-      int soundIndex = Int32.Parse(newTest[1]); // convert string to int
-      moveHandler.SetTest(newTest[0], 
-				bounceSound, 
-				soundOffset, 
-				float.Parse(newTest[1]) * 0.001f, 
+      moveHandler.SetTest(newTest[0],
+				bounceSound,
+				soundOffset,
+				pauseTime * 0.001f,
 				newTest[1]); // newTest[1] = which trajectory
       doneWithTest = false;
       Debug.Log("Starting Test: " + newTest[0] + ". Trajectory nr: " + newTest[1]);
 
       while (!doneWithTest)
       {
-        doneWithTest = moveHandler.MoveDisks();
+        doneWithTest = moveHandler.MovePendulum();
         yield return null; // Has to return in order for unity to update frame
       }
 
@@ -86,10 +85,10 @@ public class DifferentTrajectoriesTest : MonoBehaviour {
     string[] answer = new string[5];
     if(newTest[0] == "before") answer[0] = "0";
     if(newTest[0] == "at") answer[0] = "1";
-    if(newTest[0] == "after") answer[0] = "2"; 
+    if(newTest[0] == "after") answer[0] = "2";
 		answer[1] = answer[2] = "00";
 		answer[3] = newTest[1];
-		answer[4] = choice; 
+		answer[4] = choice;
 
     results.Add(answer);
     yield return null;
