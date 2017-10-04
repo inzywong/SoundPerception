@@ -12,7 +12,7 @@ public class MoveHandler : MonoBehaviour
   public float speed = 20f;
   // Apply error since dt isn't infinitly small in real time
   // Tested by pausing at coincidense and checking if disks overlap
-  public float error = 0.1f; 
+  public float error = 0.1f;
   [Header("End positions Cross Move")]
   public Vector2 endLeft;
   public Vector2 endRight;
@@ -31,6 +31,19 @@ public class MoveHandler : MonoBehaviour
   private float pauseTime;
   private bool hasPausedTime;
 
+  [Header("Pendulum variables")]
+  public float gravity = 9.81f;
+  public Vector3 centerPos = new Vector3(0f,0f,0f);
+	public float rPendulum = 23f;
+	public float alpha = Mathf.PI/2f;
+	public float alphaVel = 0;
+  public float alphaAcc;
+	public float beta;
+  public float betaVel;
+  public float betaAcc;
+  public Vector2 startLP;
+  public Vector2 startRP;
+
   void Awake()
   {
     audioS = GetComponent<AudioSource>();
@@ -40,6 +53,9 @@ public class MoveHandler : MonoBehaviour
   {
     startLeft = discTransL.position;
     startRight = discTransR.position;
+    startRP = centerPos + (new Vector3(Mathf.Sin(alpha),Mathf.Cos(alpha),0f) *rPendulum);
+    startLP = centerPos + (new Vector3(Mathf.Sin(beta),Mathf.Cos(beta),0f) *rPendulum);
+    beta = 2*Mathf.PI-alpha;
   }
 
   public void SetTest(string soundTiming, AudioClip bounceSound, float soundOffset, float pauseTime, string traject)
@@ -54,12 +70,16 @@ public class MoveHandler : MonoBehaviour
     startTime = Time.time;
     hasPlayedSound = false;
     hasPausedTime = pauseTime == 0;
+    endLeft = new Vector2(startRight.x, startRight.y);
+    endRight = new Vector2(startLeft.x, startLeft.y);
     if(traject == "Horizontal") {
-      endLeft = new Vector2(startRight.x, startRight.y);
-      endRight = new Vector2(startLeft.x, startLeft.y);
+      journeyLength = Vector3.Distance(discTransL.position, discTransR.position);
+    }
+    else if(traject == "Pendulum"){
+      journeyLength = Vector3.Distance(discTransL.position, discTransR.position)*Mathf.PI/2f;
     }
 
-    journeyLength = Vector3.Distance(discTransL.position, discTransR.position);
+
 
     // This value is used for playing the sound before coincidence. Multiply with 0.001 to convert from ms to s.
     distanceOffset = speed * (soundOffset * 0.001f) * 2; // Times 2 since they are moving towards each other.
@@ -81,7 +101,7 @@ public class MoveHandler : MonoBehaviour
   public bool MoveDisks()
   {
     float distCovered = (Time.time - startTime) * speed; // The distance traveled
-    float fracJourney = distCovered / journeyLength;  // How much of the total length has been traveled. 
+    float fracJourney = distCovered / journeyLength;  // How much of the total length has been traveled.
 
     // Move the disks towards each other
     discTransL.position = Vector3.Lerp(startLeft, endLeft, fracJourney);
@@ -101,7 +121,7 @@ public class MoveHandler : MonoBehaviour
     if (dist <= triggerDist && !hasPlayedSound)
     {
       hasPlayedSound = true;
-      // If we should play after coincidence, add delay to sound. 
+      // If we should play after coincidence, add delay to sound.
       if (soundTiming == "after")
       {
         audioS.PlayDelayed(soundOffset * 0.001f);
@@ -110,6 +130,46 @@ public class MoveHandler : MonoBehaviour
       audioS.Play();
     }
     return fracJourney >= 1;
+  }
+
+  public bool MovePendulum(){
+    float distCovered = (Time.time - startTime) * speed; // The distance traveled
+    float fracJourney = distCovered / journeyLength;  // How much of the total length has been traveled.
+
+    // Move the disks towards each other
+    discTransL.position = centerPos + (new Vector3(Mathf.Sin(alpha),Mathf.Cos(alpha),0f) *rPendulum);
+		discTransR.position = centerPos + (new Vector3(Mathf.Sin(beta),Mathf.Cos(beta),0f) *rPendulum);
+    alphaAcc = (gravity/rPendulum)*Mathf.Sin(alpha);
+		alphaVel+= alphaAcc * Time.time;
+		alpha 	+= Time.deltaTime*alphaVel;
+		betaAcc  = (gravity/rPendulum)*Mathf.Sin(beta);
+		betaVel += betaAcc * Time.time;
+		beta    += Time.deltaTime*betaVel;
+
+
+    // Distance between the disks
+    float dist = Vector3.Distance(discTransL.position, discTransR.position);
+
+    // If we should pause at the moment of coincidence
+    if (dist <= 0 + error && !hasPausedTime)
+    {
+      StartCoroutine(FramePause());
+      hasPausedTime = true;
+    }
+
+    // Check if we are within the sound trigger distance
+    if (dist <= triggerDist && !hasPlayedSound)
+    {
+      hasPlayedSound = true;
+      // If we should play after coincidence, add delay to sound.
+      if (soundTiming == "after")
+      {
+        audioS.PlayDelayed(soundOffset * 0.001f);
+        return false;
+      }
+      audioS.Play();
+    }
+    return fracJourney >= 0.9;
   }
 
   // Pause the movement for the given time
