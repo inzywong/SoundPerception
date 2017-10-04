@@ -10,18 +10,12 @@ public class MoveHandler : MonoBehaviour
   public Transform discTransR;
   [Header("Variables")]
   public float speed = 20f;
-  // public enum Sounds
-  // {
-  //   sound1,
-  //   sound2,
-  //   sound3
-  // }
-  // public Sounds sound;
-
-  // [Header("Sounds")]
-  // public AudioClip sound1;
-  // public AudioClip sound2;
-  // public AudioClip sound3;
+  // Apply error since dt isn't infinitly small in real time
+  // Tested by pausing at coincidense and checking if disks overlap
+  public float error = 0.1f; 
+  [Header("End positions Cross Move")]
+  public Vector2 endLeft;
+  public Vector2 endRight;
 
   private AudioSource audioS;
   private AudioClip bounceSound;
@@ -36,7 +30,6 @@ public class MoveHandler : MonoBehaviour
   private bool hasPlayedSound;
   private float pauseTime;
   private bool hasPausedTime;
-  private float error; // Apply error since dt isn't infinitly small
 
   void Awake()
   {
@@ -47,24 +40,9 @@ public class MoveHandler : MonoBehaviour
   {
     startLeft = discTransL.position;
     startRight = discTransR.position;
-    error = 0.1f; // Tested by pausing at coincidense and checking if disks overlap
-
-    // Attach the selected sound to the audiosource.
-    // switch (sound)
-    // {
-    //   case Sounds.sound1:
-    //     audioS.clip = sound1;
-    //     break;
-    //   case Sounds.sound2:
-    //     audioS.clip = sound2;
-    //     break;
-    //   case Sounds.sound3:
-    //     audioS.clip = sound3;
-    //     break;
-    // }
   }
 
-  public void SetTest(string soundTiming, AudioClip bounceSound, float soundOffset, float pauseTime)
+  public void SetTest(string soundTiming, AudioClip bounceSound, float soundOffset, float pauseTime, string traject)
   {
     this.soundTiming = soundTiming;
     this.soundOffset = soundOffset;
@@ -76,6 +54,10 @@ public class MoveHandler : MonoBehaviour
     startTime = Time.time;
     hasPlayedSound = false;
     hasPausedTime = pauseTime == 0;
+    if(traject == "Horizontal") {
+      endLeft = new Vector2(startRight.x, startRight.y);
+      endRight = new Vector2(startLeft.x, startLeft.y);
+    }
 
     journeyLength = Vector3.Distance(discTransL.position, discTransR.position);
 
@@ -102,20 +84,20 @@ public class MoveHandler : MonoBehaviour
     float fracJourney = distCovered / journeyLength;  // How much of the total length has been traveled. 
 
     // Move the disks towards each other
-    discTransL.position = Vector3.Lerp(startLeft, startRight, fracJourney);
-    discTransR.position = Vector3.Lerp(startRight, startLeft, fracJourney);
+    discTransL.position = Vector3.Lerp(startLeft, endLeft, fracJourney);
+    discTransR.position = Vector3.Lerp(startRight, endRight, fracJourney);
 
     // Distance between the disks
     float dist = Vector3.Distance(discTransL.position, discTransR.position);
 
+    // If we should pause at the moment of coincidence
     if (dist <= 0 + error && !hasPausedTime)
     {
-      // Debug.Log("Pause");
       StartCoroutine(FramePause());
       hasPausedTime = true;
     }
 
-    // Check if we are within the trigger distance
+    // Check if we are within the sound trigger distance
     if (dist <= triggerDist && !hasPlayedSound)
     {
       hasPlayedSound = true;

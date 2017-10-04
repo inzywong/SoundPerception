@@ -47,7 +47,7 @@ public class TestHandler : MonoBehaviour
   {
     List<string[]> results = new List<string[]>();
     yield return StartCoroutine(frameStopTest.StartTest(value => results = value));
-    SaveResults(results, "New Test 1 (frame/time stop)");
+    SaveResults(results, "");
 
     theCanvas.SetActive(true);
   }
@@ -62,7 +62,7 @@ public class TestHandler : MonoBehaviour
   {
     List<string[]> results = new List<string[]>();
     yield return StartCoroutine(diffSoundTest.StartTest(value => results = value));
-    SaveResults(results, "New Test 2 (different sounds)");
+    SaveResults(results, "");
 
     theCanvas.SetActive(true);
   }
@@ -71,7 +71,7 @@ public class TestHandler : MonoBehaviour
   void SaveResults(List<string[]> results, string title)
   {
     StringBuilder sb = new StringBuilder();
-    sb.AppendLine(title);
+    //sb.AppendLine(title);
     for (int i = 0; i < results.Count; i++)
     {
       sb.AppendLine(string.Join(",", results[i]));

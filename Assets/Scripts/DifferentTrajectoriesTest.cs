@@ -1,18 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FrameStopTest : MonoBehaviour
-{
-  [Header("Variables")]
+public class DifferentTrajectoriesTest : MonoBehaviour {
+
+	[Header("Variables")]
   // public int numberOfRuns = 1;
   [Tooltip("Sound offset [ms]. The delay used in the before and after timings.")]
   public float soundOffset = 150f;
   [Tooltip("The time between each test [s]")]
-  public float waitTime = 2;
+  public float waitTime = 0.5f;
   [Tooltip("Time to pause at the moment of coincidence [ms]")]
-  // public float pauseTime1, pauseTime2, pauseTime3;
-  public float[] pauseTime;
+  public float pauseTime;
   [Header("Sound")]
   public AudioClip bounceSound;
 
@@ -20,6 +20,7 @@ public class FrameStopTest : MonoBehaviour
   private MoveHandler moveHandler;
   private List<List<string>> testOrder = new List<List<string>>();
   private List<string[]> results = new List<string[]>();
+  private string[] trajectories = new string[] {"Cross", "Pendulum"}; // 1 = cross, 2 = pendulum
 
   void Awake()
   {
@@ -42,14 +43,15 @@ public class FrameStopTest : MonoBehaviour
       // Start the next test
       List<string> newTest = testOrder[0];
       testOrder.RemoveAt(0);
-      // newTest[0] = at, before or after. newTest[1] = coincidence pause time
+      // newTest[0] = at, before or after. newTest[1] = index of sound to use
+      int soundIndex = Int32.Parse(newTest[1]); // convert string to int
       moveHandler.SetTest(newTest[0], 
-        bounceSound, 
-        soundOffset, 
-        float.Parse(newTest[1]) * 0.001f, 
-        "Horizontal");
+				bounceSound, 
+				soundOffset, 
+				float.Parse(newTest[1]) * 0.001f, 
+				newTest[1]); // newTest[1] = which trajectory
       doneWithTest = false;
-      Debug.Log("Starting Test: " + newTest[0] + ". Frame pause: " + newTest[1]);
+      Debug.Log("Starting Test: " + newTest[0] + ". Sound nr: " + newTest[1]);
 
       while (!doneWithTest)
       {
@@ -71,23 +73,23 @@ public class FrameStopTest : MonoBehaviour
       if (Input.GetMouseButtonDown(0))
       {
         hasAnswered = true;
-        choice = "1"; // 1 represents bounce
+        choice = "1"; // Bounce
       }
       if (Input.GetMouseButtonDown(1))
       {
         hasAnswered = true;
-        choice = "0"; // 0 represents no bounce
+        choice = "0"; // No bounce
       }
       yield return null;
     }
-    string[] answer = new string[5];
 
+    string[] answer = new string[5]; //{ newTest[0], bounceSounds[soundIndex].name + "(" + soundIndex + ")", choice };
     if(newTest[0] == "before") answer[0] = "0";
     if(newTest[0] == "at") answer[0] = "1";
     if(newTest[0] == "after") answer[0] = "2"; 
-    answer[1] = newTest[1];
-    answer[2] = answer[3] = "00"; // same sound and trajectory used
-    answer[4] = choice;
+		answer[1] = answer[2] = "00";
+		answer[3] = newTest[1];
+		answer[4] = choice; 
 
     results.Add(answer);
     yield return null;
@@ -109,15 +111,15 @@ public class FrameStopTest : MonoBehaviour
 
     while (original.Count != 0)
     {
-      int randomIndex = Random.Range(0, original.Count);
+      int randomIndex = UnityEngine.Random.Range(0, original.Count);
       string timing = original[randomIndex];
       original.RemoveAt(randomIndex);
 
-      // Create 3 different tests, one for each "frame" stop type.
-      for (int i = 0; i < pauseTime.Length; i++)
+      // Create 3 different tests, one for each "sound" to use. "i" is the index in the sounds array.
+      for (int i = 0; i < trajectories.Length; i++)
       {
-        List<string> pauseLength = new List<string> { timing, pauseTime[i].ToString() };
-        almostScrambled.Add(pauseLength);
+        List<string> sound = new List<string> { timing, trajectories[i] };
+        almostScrambled.Add(sound);
       }
     }
 
@@ -125,7 +127,7 @@ public class FrameStopTest : MonoBehaviour
     List<List<string>> scrambled = new List<List<string>>();
     while (almostScrambled.Count != 0)
     {
-      int randomIndex = Random.Range(0, almostScrambled.Count);
+      int randomIndex = UnityEngine.Random.Range(0, almostScrambled.Count);
       List<string> temp = almostScrambled[randomIndex];
       almostScrambled.RemoveAt(randomIndex);
       scrambled.Add(temp);
