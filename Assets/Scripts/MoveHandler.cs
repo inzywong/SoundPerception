@@ -13,9 +13,9 @@ public class MoveHandler : MonoBehaviour
   // Apply error since dt isn't infinitly small in real time
   // Tested by pausing at coincidense and checking if disks overlap
   public float error = 0.1f;
-  [Header("End positions Cross Move")]
-  public Vector2 endLeft;
-  public Vector2 endRight;
+  // [Header("End positions Cross Move")]
+  private Vector3 endLeft;
+  private Vector3 endRight;
 
   private AudioSource audioS;
   private AudioClip bounceSound;
@@ -81,17 +81,25 @@ public class MoveHandler : MonoBehaviour
     startTime = Time.time;
     hasPlayedSound = false;
     hasPausedTime = pauseTime == 0;
-    endLeft = new Vector2(startRight.x, startRight.y);
-    endRight = new Vector2(startLeft.x, startLeft.y);
 
-    if (traject == "Horizontal")
+    if (traject == "Horizontal" || traject == "Cross")
     {
-      journeyLength = Vector3.Distance(discTransL.position, discTransR.position);
+      if (traject == "Horizontal")
+      {
+        endLeft = new Vector2(startRight.x, startRight.y);
+        endRight = new Vector2(startLeft.x, startLeft.y);
+      }
+      else if (traject == "Cross")
+      {
+        endLeft = new Vector3(startRight.x, startRight.y - startRight.x);
+        endRight = new Vector3(startLeft.x, startLeft.y - startRight.x);
+      }
+
+      journeyLength = Vector3.Distance(startRight, endRight);
       float halfD = journeyLength / 2;
       float timeToHalfD = halfD / speed;
       // Need seperate for this since we freeze time at coincidense. 
       float distanceForBefore = speed * (timeToHalfD - (soundOffset * 0.001f));
-
       // Set the distance offset depending on our choice
       switch (soundTiming)
       {
@@ -106,9 +114,12 @@ public class MoveHandler : MonoBehaviour
     }
 
     //TODO: Pendulum at, before and after. Cross
-    else if (traject == "Pendulum" || traject == "Cross")
+    else if (traject == "Pendulum")
     {
       journeyLength = Vector3.Distance(discTransL.position, discTransR.position) * Mathf.PI / 2f;
+      endLeft = new Vector3(startRight.x, startRight.y);
+      endRight = new Vector3(startLeft.x, startLeft.y);
+
       switch (soundTiming)
       {
         case "at":

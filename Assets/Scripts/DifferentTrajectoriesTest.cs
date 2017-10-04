@@ -55,7 +55,10 @@ public class DifferentTrajectoriesTest : MonoBehaviour
 
       while (!doneWithTest)
       {
-        doneWithTest = moveHandler.MovePendulum();
+        if (newTest[1] == "Pendulum")
+          doneWithTest = moveHandler.MovePendulum();
+        else
+          doneWithTest = moveHandler.MoveDisks();
         yield return null; // Has to return in order for unity to update frame
       }
 

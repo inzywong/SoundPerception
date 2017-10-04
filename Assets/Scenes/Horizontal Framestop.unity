@@ -1003,7 +1003,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   discTransL: {fileID: 1001807370}
   discTransR: {fileID: 1749551036}
-  speed: 25
+  speed: 40
   error: 0.1
   endLeft: {x: 0, y: 0}
   endRight: {x: 0, y: 0}
@@ -1041,7 +1041,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -1148,7 +1148,7 @@ MonoBehaviour:
   - 0
   - 100
   - 150
-  bounceSound: {fileID: 8300000, guid: bc20f985088c2464488c5ebeb66f2bf7, type: 3}
+  bounceSound: {fileID: 8300000, guid: dc3097208a83c304e8c000f381e0c668, type: 3}
 --- !u!114 &1697533935
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1164,8 +1164,8 @@ MonoBehaviour:
   waitTime: 0.5
   pauseTime: 0
   bounceSounds:
-  - {fileID: 8300000, guid: df6d47c840ed50547bdd1a2bb882e8e9, type: 3}
-  - {fileID: 8300000, guid: d23ea90888c804d279d6e4b5b641d07c, type: 3}
+  - {fileID: 8300000, guid: fab625e39e7641c4d9de97d809d1afc6, type: 3}
+  - {fileID: 8300000, guid: 246346b977c6f56438bb21f543eca863, type: 3}
 --- !u!114 &1697533936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1180,7 +1180,7 @@ MonoBehaviour:
   soundOffset: 150
   waitTime: 0.5
   pauseTime: 0
-  bounceSound: {fileID: 8300000, guid: bc20f985088c2464488c5ebeb66f2bf7, type: 3}
+  bounceSound: {fileID: 8300000, guid: fab625e39e7641c4d9de97d809d1afc6, type: 3}
 --- !u!1 &1749551034
 GameObject:
   m_ObjectHideFlags: 0
