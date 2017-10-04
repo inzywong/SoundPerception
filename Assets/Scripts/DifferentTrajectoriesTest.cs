@@ -51,7 +51,7 @@ public class DifferentTrajectoriesTest : MonoBehaviour {
 				float.Parse(newTest[1]) * 0.001f, 
 				newTest[1]); // newTest[1] = which trajectory
       doneWithTest = false;
-      Debug.Log("Starting Test: " + newTest[0] + ". Sound nr: " + newTest[1]);
+      Debug.Log("Starting Test: " + newTest[0] + ". Trajectory nr: " + newTest[1]);
 
       while (!doneWithTest)
       {
@@ -83,7 +83,7 @@ public class DifferentTrajectoriesTest : MonoBehaviour {
       yield return null;
     }
 
-    string[] answer = new string[5]; //{ newTest[0], bounceSounds[soundIndex].name + "(" + soundIndex + ")", choice };
+    string[] answer = new string[5];
     if(newTest[0] == "before") answer[0] = "0";
     if(newTest[0] == "at") answer[0] = "1";
     if(newTest[0] == "after") answer[0] = "2"; 
