@@ -91,7 +91,8 @@ public class DifferentTrajectoriesTest : MonoBehaviour
     if (newTest[0] == "at") answer[0] = "1";
     if (newTest[0] == "after") answer[0] = "2";
     answer[1] = answer[2] = "00";
-    answer[3] = newTest[1];
+    if (newTest[1] == "Cross") answer[3] = "1";
+    if (newTest[1] == "Pendulum") answer[3] = "2";
     answer[4] = choice;
 
     results.Add(answer);
