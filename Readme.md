@@ -3,7 +3,7 @@ Test 1 has different frame stop times
 Test 2 has differnet sounds  
 Test 3 has different trajectories  
 
-After each test
+After each test  
 Left click to answe "bounce"  
 Right click to answer "no bounce"  
 
