@@ -11,7 +11,7 @@ Right click to answer "no bounce"
 col 1: 0 -> before, 1 -> at, 2 -> after  
 col 2: frame pause in mili sec  
 col 3: sound nr  
-col 4: 1 -> Cross, 2 -> Pendulum  
+col 4: 1 -> Horizontal, 2 -> Cross, 3 -> Pendulum  
 col 5: 0 -> no bounce, -> 1 bounce   
 col 6: 11 -> frame stop test, 22 -> different sound test, 33 -> different trajectories test  
 double 00 means it doesn't change durring the test, check in unity.
