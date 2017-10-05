@@ -1109,7 +1109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backgroundColor: {r: 0.47058827, g: 0.47058827, b: 0.47058827, a: 1}
-  diskColorL: {r: 0.9558824, g: 0.44279847, b: 0.44279847, a: 1}
+  diskColorL: {r: 1, g: 1, b: 1, a: 1}
   diskColorR: {r: 1, g: 1, b: 1, a: 1}
   xColor: {r: 0, g: 0, b: 0, a: 1}
   discL: {fileID: 1001807368}
