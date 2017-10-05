@@ -19,9 +19,9 @@ public class TestHandler : MonoBehaviour
   public GameObject xLookAt;
   [Header("UI components")]
   public GameObject theCanvas;
-  [Header("File name for saving data")]
-  [Tooltip("Recomended filetype is .csv. No path will default to project folder")]
-  public string filePath = "gathered_data.csv";
+  // [Header("File name for saving data")]
+  // [Tooltip("Recomended filetype is .csv. No path will default to project folder")]
+  // public string filePath = "gathered_data.csv";
 
   private FrameStopTest frameStopTest;
   private DifferentSoundTest diffSoundTest;
@@ -49,7 +49,7 @@ public class TestHandler : MonoBehaviour
   {
     List<string[]> results = new List<string[]>();
     yield return StartCoroutine(frameStopTest.StartTest(value => results = value));
-    SaveResults(results, "");
+    SaveResults(results, "Test1_data.csv");
 
     theCanvas.SetActive(true);
   }
@@ -64,7 +64,7 @@ public class TestHandler : MonoBehaviour
   {
     List<string[]> results = new List<string[]>();
     yield return StartCoroutine(diffSoundTest.StartTest(value => results = value));
-    SaveResults(results, "");
+    SaveResults(results, "Test2_data.csv");
 
     theCanvas.SetActive(true);
   }
@@ -78,14 +78,14 @@ public class TestHandler : MonoBehaviour
   {
     List<string[]> results = new List<string[]>();
     yield return StartCoroutine(diffTrajTest.StartTest(value => results = value));
-    SaveResults(results, "");
+    SaveResults(results, "Test3_data.csv");
 
     theCanvas.SetActive(true);
   }
 
 
   // Save the results to a file
-  void SaveResults(List<string[]> results, string title)
+  void SaveResults(List<string[]> results, string fileName)
   {
     StringBuilder sb = new StringBuilder();
     //sb.AppendLine(title);
@@ -93,7 +93,7 @@ public class TestHandler : MonoBehaviour
     {
       sb.AppendLine(string.Join(",", results[i]));
     }
-    File.AppendAllText(filePath, sb.ToString());
+    File.AppendAllText(fileName, sb.ToString());
     Debug.Log("Data saved!");
   }
 

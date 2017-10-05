@@ -44,10 +44,10 @@ public class DifferentSoundTest : MonoBehaviour
       testOrder.RemoveAt(0);
       // newTest[0] = at, before or after. newTest[1] = index of sound to use
       int soundIndex = Int32.Parse(newTest[1]); // convert string to int
-      moveHandler.SetTest(newTest[0], 
-        bounceSounds[soundIndex], 
-        soundOffset, 
-        float.Parse(newTest[1]) * 0.001f, 
+      moveHandler.SetTest(newTest[0],
+        bounceSounds[soundIndex],
+        soundOffset,
+        float.Parse(newTest[1]) * 0.001f,
         "Horizontal");
       doneWithTest = false;
       Debug.Log("Starting Test: " + newTest[0] + ". Sound nr: " + newTest[1]);
@@ -83,14 +83,15 @@ public class DifferentSoundTest : MonoBehaviour
     }
 
     string[] answer = new string[5];
-        if(newTest[0] == "before") answer[0] = "0";
-    if(newTest[0] == "at") answer[0] = "1";
-    if(newTest[0] == "after") answer[0] = "2"; 
-    answer[1] = "00"; 
+    if (newTest[0] == "before") answer[0] = "1";
+    if (newTest[0] == "at") answer[0] = "2";
+    if (newTest[0] == "after") answer[0] = "3";
+    answer[1] = soundOffset.ToString();
     int soundIndex = Int32.Parse(newTest[1]);
     answer[2] = bounceSounds[soundIndex].name;
-    answer[3] = "00";
+    answer[3] = "1";
     answer[4] = choice;
+    // answer[5] = "22";
 
     results.Add(answer);
     yield return null;

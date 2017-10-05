@@ -199,8 +199,8 @@ public class MoveHandler : MonoBehaviour
     }
     if (l >= (travelDistPendulum - offset) / 2 && !hasPausedTime)
     {
-      Time.timeScale = 0;
-      // StartCoroutine(FramePause());
+      // Time.timeScale = 0;
+      StartCoroutine(FramePause());
       hasPausedTime = true;
     }
 

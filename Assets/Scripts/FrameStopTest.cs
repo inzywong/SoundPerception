@@ -43,10 +43,10 @@ public class FrameStopTest : MonoBehaviour
       List<string> newTest = testOrder[0];
       testOrder.RemoveAt(0);
       // newTest[0] = at, before or after. newTest[1] = coincidence pause time
-      moveHandler.SetTest(newTest[0], 
-        bounceSound, 
-        soundOffset, 
-        float.Parse(newTest[1]) * 0.001f, 
+      moveHandler.SetTest(newTest[0],
+        bounceSound,
+        soundOffset,
+        float.Parse(newTest[1]) * 0.001f,
         "Horizontal");
       doneWithTest = false;
       Debug.Log("Starting Test: " + newTest[0] + ". Frame pause: " + newTest[1]);
@@ -82,12 +82,14 @@ public class FrameStopTest : MonoBehaviour
     }
     string[] answer = new string[5];
 
-    if(newTest[0] == "before") answer[0] = "0";
-    if(newTest[0] == "at") answer[0] = "1";
-    if(newTest[0] == "after") answer[0] = "2"; 
-    answer[1] = newTest[1];
-    answer[2] = answer[3] = "00"; // same sound and trajectory used
-    answer[4] = choice;
+    if (newTest[0] == "before") answer[0] = "1";
+    if (newTest[0] == "at") answer[0] = "2";
+    if (newTest[0] == "after") answer[0] = "3";
+    answer[1] = newTest[1]; // Sound offset / frame stop
+    answer[2] = bounceSound.name; // Sound name
+    answer[3] = "1"; // Horizontal
+    answer[4] = choice; // User answer
+    // answer[5] = "11"; // Which test
 
     results.Add(answer);
     yield return null;

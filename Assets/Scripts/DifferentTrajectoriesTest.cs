@@ -90,10 +90,12 @@ public class DifferentTrajectoriesTest : MonoBehaviour
     if (newTest[0] == "before") answer[0] = "0";
     if (newTest[0] == "at") answer[0] = "1";
     if (newTest[0] == "after") answer[0] = "2";
-    answer[1] = answer[2] = "00";
-    if (newTest[1] == "Cross") answer[3] = "1";
-    if (newTest[1] == "Pendulum") answer[3] = "2";
+    answer[1] = soundOffset.ToString();
+    answer[2] = bounceSound.name;
+    if (newTest[1] == "Cross") answer[3] = "2";
+    if (newTest[1] == "Pendulum") answer[3] = "3";
     answer[4] = choice;
+    // answer[5] = "33";
 
     results.Add(answer);
     yield return null;
