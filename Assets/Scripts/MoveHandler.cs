@@ -149,7 +149,7 @@ public class MoveHandler : MonoBehaviour
     discTransR.position = Vector3.Lerp(startRight, endRight, fracJourney);
 
     // Check if we are within the sound trigger distance
-    if (distCovered >= triggerDist && !hasPlayedSound)
+	if (distCovered >= triggerDist && !hasPlayedSound && soundTiming != "none")
     {
       hasPlayedSound = true;
       // If we should play after coincidence, add delay to sound, since we might freeze time.
@@ -163,8 +163,9 @@ public class MoveHandler : MonoBehaviour
       }
     }
     // If we should pause at the moment of coincidence
-    if (distCovered >= Vector3.Distance(startLeft, endLeft) / 2 && !hasPausedTime)
+    if (distCovered >= Vector3.Distance(startLeft, endLeft) / 2  - 0.5f && !hasPausedTime)
     {
+			//Time.timeScale = 0;
       StartCoroutine(FramePause());
       hasPausedTime = true;
     }
@@ -186,7 +187,7 @@ public class MoveHandler : MonoBehaviour
     beta += Time.deltaTime * betaVel;
 
     // Subtract 5 since dt isn't small enough in real time
-    if (l >= pendulumSoundOffset && !hasPlayedSound)
+	if (l >= pendulumSoundOffset && !hasPlayedSound && soundTiming != "none")
     {
       hasPlayedSound = true;
       if (soundTiming == "after")

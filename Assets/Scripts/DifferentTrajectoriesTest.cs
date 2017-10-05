@@ -73,12 +73,12 @@ public class DifferentTrajectoriesTest : MonoBehaviour
     string choice = "";
     while (!hasAnswered)
     {
-      if (Input.GetMouseButtonDown(0))
+			if (Input.GetKeyDown(KeyCode.Z))
       {
         hasAnswered = true;
         choice = "1"; // Bounce
       }
-      if (Input.GetMouseButtonDown(1))
+			if (Input.GetKeyDown(KeyCode.M))
       {
         hasAnswered = true;
         choice = "0"; // No bounce
@@ -87,9 +87,10 @@ public class DifferentTrajectoriesTest : MonoBehaviour
     }
 
     string[] answer = new string[5];
-    if (newTest[0] == "before") answer[0] = "0";
-    if (newTest[0] == "at") answer[0] = "1";
-    if (newTest[0] == "after") answer[0] = "2";
+	if (newTest[0] == "none") answer[0] = "0";
+	if (newTest[0] == "before") answer[0] = "1";
+    if (newTest[0] == "at") answer[0] = "2";
+    if (newTest[0] == "after") answer[0] = "3";
     answer[1] = soundOffset.ToString();
     answer[2] = bounceSound.name;
     if (newTest[1] == "Cross") answer[3] = "2";
@@ -105,7 +106,7 @@ public class DifferentTrajectoriesTest : MonoBehaviour
   // TODO: include framestop
   public List<List<string>> RandomizeTests()
   {
-    List<string> tests = new List<string> { "at", "before", "after" };
+    List<string> tests = new List<string> { "at", "before", "after", "none" };
     List<List<string>> randomTests = Scramble(tests);
     return randomTests;
   }
