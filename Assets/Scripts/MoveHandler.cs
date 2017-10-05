@@ -12,7 +12,7 @@ public class MoveHandler : MonoBehaviour
   public float speed = 20f;
   // Apply error since dt isn't infinitly small in real time
   // Tested by pausing at coincidense and checking if disks overlap
-  public float error = 0.1f;
+  // public float error = 0.1f;
   // [Header("End positions Cross Move")]
   private Vector3 endLeft;
   private Vector3 endRight;
@@ -31,23 +31,23 @@ public class MoveHandler : MonoBehaviour
   private float pauseTime;
   private bool hasPausedTime;
 
-  [Header("Pendulum variables (Keep gravity at 8!)")]
-  public float gravity = 1f;
-  public Vector3 centerPos = new Vector3(0f, 0f, 0f);
-  public float rPendulum;
-  public float alpha;
-  public float alphaVel;
-  public float alphaAcc;
-  public float beta;
-  public float betaVel;
-  public float betaAcc;
-  public Vector2 startLP;
-  public Vector2 startRP;
+  // [Header("Pendulum variables (Keep gravity at 8!)")]
+  private float gravity = 8f;
+  private Vector3 centerPos = new Vector3(0f, 0f, 0f);
+  private float rPendulum = 40;
+  private float alpha = 1.570796f;
+  private float alphaVel;
+  private float alphaAcc;
+  private float beta;
+  private float betaVel;
+  private float betaAcc;
+  private Vector2 startLP;
+  private Vector2 startRP;
 
   private float startAlpha;
   private float startBeta;
   private float eclipseTime = 0.74f;
-  private float pendulumTimeSound = 0;
+  private float pendulumSoundOffset = 0;
   private float travelDistPendulum = 0;
   private float halfWayTime = 0;
 
@@ -118,27 +118,22 @@ public class MoveHandler : MonoBehaviour
     //TODO: Pendulum at, before and after
     else if (traject == "Pendulum")
     {
-      journeyLength = Vector3.Distance(discTransL.position, discTransR.position) * Mathf.PI / 2f;
       endLeft = new Vector3(startRight.x, startRight.y);
       endRight = new Vector3(startLeft.x, startLeft.y);
       alpha = startAlpha;
       beta = startBeta;
       alphaVel = 0;
       betaVel = 0;
+      float offset = 2; // Tested to get this.
 
       switch (soundTiming)
       {
         case "at":
-          pendulumTimeSound = eclipseTime;
-          // audioS.PlayDelayed(eclipseTime);
-          break;
         case "after":
-          pendulumTimeSound = eclipseTime + (soundOffset * 0.001f);
-          // audioS.PlayDelayed(eclipseTime + (soundOffset * 0.001f) + GetComponent<DifferentTrajectoriesTest>().waitTime);
+          pendulumSoundOffset = (travelDistPendulum / 2) - offset;
           break;
         case "before":
-          pendulumTimeSound = eclipseTime - (soundOffset * 0.001f);
-          // audioS.PlayDelayed(eclipseTime - (soundOffset * 0.001f));
+          pendulumSoundOffset = 35.39f; // Tested by printing time and distance
           break;
       }
     }
@@ -191,19 +186,26 @@ public class MoveHandler : MonoBehaviour
     beta += Time.deltaTime * betaVel;
 
     // Subtract 5 since dt isn't small enough in real time
-    float offset = 5;
-    if (l >= (travelDistPendulum - offset) / 2 && !hasPlayedSound)
+    if (l >= pendulumSoundOffset && !hasPlayedSound)
     {
-      audioS.Play();
       hasPlayedSound = true;
+      if (soundTiming == "after")
+      {
+        audioS.PlayDelayed(soundOffset * 0.001f);
+      }
+      else
+      {
+        audioS.Play();
+      }
     }
-    if (l >= (travelDistPendulum - offset) / 2 && !hasPausedTime)
+
+    // Always at coincidence!
+    float offset = 2;
+    if (l >= (travelDistPendulum / 2) - offset && !hasPausedTime)
     {
-      // Time.timeScale = 0;
       StartCoroutine(FramePause());
       hasPausedTime = true;
     }
-
     return l >= 105;
   }
 

@@ -8,10 +8,10 @@ public class DifferentTrajectoriesTest : MonoBehaviour
 
   [Header("Variables")]
   // public int numberOfRuns = 1;
-  [Tooltip("Sound offset [ms]. The delay used in the before and after timings.")]
-  public float soundOffset = 150f;
-  [Tooltip("The time between each test [s]")]
-  public float waitTime = 0.5f;
+  // [Tooltip("Sound offset [ms]. The delay used in the before and after timings.")]
+  private float soundOffset = 150f;
+  // [Tooltip("The time between each test [s]")]
+  private float waitTime = 0.5f;
   [Tooltip("Time to pause at the moment of coincidence [ms]")]
   public float pauseTime;
   [Header("Sound")]
