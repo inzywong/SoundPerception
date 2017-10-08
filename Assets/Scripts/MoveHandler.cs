@@ -51,6 +51,8 @@ public class MoveHandler : MonoBehaviour
   private float travelDistPendulum = 0;
   private float halfWayTime = 0;
 
+  private float linearTrajOffset = 0;
+
   void Awake()
   {
     audioS = GetComponent<AudioSource>();
@@ -77,8 +79,8 @@ public class MoveHandler : MonoBehaviour
     this.pauseTime = pauseTime;
     this.bounceSound = bounceSound;
     audioS.clip = this.bounceSound;
-    discTransL.position = startLeft;
-    discTransR.position = startRight;
+    // discTransL.position = startLeft;
+    // discTransR.position = startRight;
     startTime = Time.time;
     hasPlayedSound = false;
     hasPausedTime = pauseTime == 0;
@@ -89,11 +91,19 @@ public class MoveHandler : MonoBehaviour
       {
         endLeft = new Vector2(startRight.x, startRight.y);
         endRight = new Vector2(startLeft.x, startLeft.y);
+        // Adjustments to make them coincide exactly
+        startLeft = new Vector3(-70, 0, 0);
+        startRight = new Vector3(70, 0, 0);
+        linearTrajOffset = -0.5f;
       }
       else if (traject == "Cross")
       {
         endLeft = new Vector3(startRight.x, startRight.y - startRight.x);
         endRight = new Vector3(startLeft.x, startLeft.y - startRight.x);
+        // Adjustments to make them coincide exactly
+        startLeft = new Vector3(-69.1f, 0, 0);
+        startRight = new Vector3(70, 0, 0);
+        linearTrajOffset = -0.3f;
       }
 
       journeyLength = Vector3.Distance(startRight, endRight);
@@ -162,9 +172,11 @@ public class MoveHandler : MonoBehaviour
         audioS.Play();
       }
     }
+
     // If we should pause at the moment of coincidence
-    if (distCovered >= Vector3.Distance(startLeft, endLeft) / 2 - 0.5f && !hasPausedTime)
+    if (distCovered >= journeyLength / 2 + linearTrajOffset && !hasPausedTime)
     {
+      // Time.timeScale = 0;
       StartCoroutine(FramePause());
       hasPausedTime = true;
     }

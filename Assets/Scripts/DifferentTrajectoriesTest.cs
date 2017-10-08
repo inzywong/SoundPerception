@@ -5,13 +5,6 @@ using UnityEngine;
 
 public class DifferentTrajectoriesTest : MonoBehaviour
 {
-
-  [Header("Variables")]
-  // public int numberOfRuns = 1;
-  // [Tooltip("Sound offset [ms]. The delay used in the before and after timings.")]
-  private float soundOffset = 150f;
-  // [Tooltip("The time between each test [s]")]
-  private float waitTime = 0.5f;
   [Tooltip("Time to pause at the moment of coincidence [ms]")]
   public float pauseTime;
   [Header("Sound")]
@@ -21,6 +14,8 @@ public class DifferentTrajectoriesTest : MonoBehaviour
   public bool cross;
   public bool pendulum;
 
+  private float soundOffset = 150f;
+  private float waitTime = 0.5f;
   private bool doneWithTest = true;
   private MoveHandler moveHandler;
   private List<List<string>> testOrder = new List<List<string>>();
@@ -105,17 +100,16 @@ public class DifferentTrajectoriesTest : MonoBehaviour
     if (newTest[0] == "after") answer[0] = "3";
     answer[1] = soundOffset.ToString();
     answer[2] = bounceSound.name;
+    if (newTest[1] == "Horizontal") answer[3] = "1";
     if (newTest[1] == "Cross") answer[3] = "2";
     if (newTest[1] == "Pendulum") answer[3] = "3";
     answer[4] = choice;
-    // answer[5] = "33";
 
     results.Add(answer);
     yield return null;
   }
 
   // Gives a random order of "at", "before" and "after"
-  // TODO: include framestop
   public List<List<string>> RandomizeTests()
   {
     List<string> tests = new List<string> { "at", "before", "after", "none" };
