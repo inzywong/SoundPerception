@@ -29,6 +29,7 @@ public class DifferentSoundTest : MonoBehaviour
   public IEnumerator StartTest(System.Action<List<string[]>> result)
   {
     testOrder = RandomizeTests();
+    results.Clear();
 
     yield return new WaitForSeconds(waitTime);
     yield return StartCoroutine(RunTest());
@@ -69,12 +70,12 @@ public class DifferentSoundTest : MonoBehaviour
     string choice = "";
     while (!hasAnswered)
     {
-			if (Input.GetKeyDown(KeyCode.Z))
+      if (Input.GetKeyDown(KeyCode.Z))
       {
         hasAnswered = true;
         choice = "1"; // 1 represents bounce
       }
-			if (Input.GetKeyDown(KeyCode.M))
+      if (Input.GetKeyDown(KeyCode.M))
       {
         hasAnswered = true;
         choice = "0"; // 0 represents no bounce
@@ -83,7 +84,7 @@ public class DifferentSoundTest : MonoBehaviour
     }
 
     string[] answer = new string[5];
-	if (newTest[0] == "none") answer[0] = "0";
+    if (newTest[0] == "none") answer[0] = "0";
     if (newTest[0] == "before") answer[0] = "1";
     if (newTest[0] == "at") answer[0] = "2";
     if (newTest[0] == "after") answer[0] = "3";

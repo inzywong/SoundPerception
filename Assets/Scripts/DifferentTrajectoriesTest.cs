@@ -31,6 +31,7 @@ public class DifferentTrajectoriesTest : MonoBehaviour
   public IEnumerator StartTest(System.Action<List<string[]>> result)
   {
     testOrder = RandomizeTests();
+    results.Clear();
 
     yield return new WaitForSeconds(waitTime);
     yield return StartCoroutine(RunTest());
@@ -73,12 +74,12 @@ public class DifferentTrajectoriesTest : MonoBehaviour
     string choice = "";
     while (!hasAnswered)
     {
-			if (Input.GetKeyDown(KeyCode.Z))
+      if (Input.GetKeyDown(KeyCode.Z))
       {
         hasAnswered = true;
         choice = "1"; // Bounce
       }
-			if (Input.GetKeyDown(KeyCode.M))
+      if (Input.GetKeyDown(KeyCode.M))
       {
         hasAnswered = true;
         choice = "0"; // No bounce
@@ -87,8 +88,8 @@ public class DifferentTrajectoriesTest : MonoBehaviour
     }
 
     string[] answer = new string[5];
-	if (newTest[0] == "none") answer[0] = "0";
-	if (newTest[0] == "before") answer[0] = "1";
+    if (newTest[0] == "none") answer[0] = "0";
+    if (newTest[0] == "before") answer[0] = "1";
     if (newTest[0] == "at") answer[0] = "2";
     if (newTest[0] == "after") answer[0] = "3";
     answer[1] = soundOffset.ToString();
