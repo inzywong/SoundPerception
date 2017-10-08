@@ -6,6 +6,7 @@ using UnityEngine;
 public class DifferentTrajectoriesTest : MonoBehaviour
 {
   [Tooltip("Time to pause at the moment of coincidence [ms]")]
+  [ShowOnly]
   public float pauseTime;
   [Header("Sound")]
   public AudioClip bounceSound;
@@ -98,7 +99,7 @@ public class DifferentTrajectoriesTest : MonoBehaviour
     if (newTest[0] == "before") answer[0] = "1";
     if (newTest[0] == "at") answer[0] = "2";
     if (newTest[0] == "after") answer[0] = "3";
-    answer[1] = soundOffset.ToString();
+    answer[1] = pauseTime.ToString();
     answer[2] = bounceSound.name;
     if (newTest[1] == "Horizontal") answer[3] = "1";
     if (newTest[1] == "Cross") answer[3] = "2";

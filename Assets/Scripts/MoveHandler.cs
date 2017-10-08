@@ -33,9 +33,10 @@ public class MoveHandler : MonoBehaviour
 
   // [Header("Pendulum variables (Keep gravity at 8!)")]
   private float gravity = 8f;
-  private Vector3 centerPos = new Vector3(0f, 0f, 0f);
+  public Transform centerPos;
   private float rPendulum = 40;
-  private float alpha = 1.570796f;
+  // private float alpha = -45 * Mathf.PI / 180;
+  private float alpha;
   private float alphaVel;
   private float alphaAcc;
   private float beta;
@@ -62,14 +63,17 @@ public class MoveHandler : MonoBehaviour
   {
     startLeft = discTransL.position;
     startRight = discTransR.position;
-    startRP = centerPos + (new Vector3(Mathf.Sin(alpha), Mathf.Cos(alpha), 0f) * rPendulum);
-    startLP = centerPos + (new Vector3(Mathf.Sin(beta), Mathf.Cos(beta), 0f) * rPendulum);
+    // Angle from hangpoint to starting position
+    alpha = Vector3.Angle(-transform.up, centerPos.position - discTransR.position) * Mathf.PI / 180;
     beta = 2 * Mathf.PI - alpha;
-    rPendulum = discTransR.position.x - centerPos.x;
+    // startRP = centerPos.position + (new Vector3(Mathf.Sin(alpha), Mathf.Cos(alpha), 0f) * rPendulum);
+    // startLP = centerPos.position + (new Vector3(Mathf.Sin(beta), Mathf.Cos(beta), 0f) * rPendulum);
+    rPendulum = (discTransR.position - centerPos.position).magnitude;
     startAlpha = alpha;
     startBeta = beta;
-    travelDistPendulum = Mathf.PI * Vector3.Distance(startLeft, startRight) / 2;
-
+    travelDistPendulum = rPendulum * ((Mathf.PI - alpha) * 2);
+    // Debug.Log("Horizontal distance: " + Vector3.Distance(startLeft, startRight));
+    // Debug.Log("Pendulum distance: " + travelDistPendulum);
   }
 
   public void SetTest(string soundTiming, AudioClip bounceSound, float soundOffset, float pauseTime, string traject)
@@ -134,16 +138,16 @@ public class MoveHandler : MonoBehaviour
       beta = startBeta;
       alphaVel = 0;
       betaVel = 0;
-      float offset = 2; // Tested to get this.
+      float offset = -2.5f; // Tested to get this.
 
       switch (soundTiming)
       {
         case "at":
         case "after":
-          pendulumSoundOffset = (travelDistPendulum / 2) - offset;
+          pendulumSoundOffset = (travelDistPendulum / 2) + offset;
           break;
         case "before":
-          pendulumSoundOffset = 35.39f; // Tested by printing time and distance
+          pendulumSoundOffset = 70.34f; // Tested by printing time and distance
           break;
       }
     }
@@ -186,10 +190,10 @@ public class MoveHandler : MonoBehaviour
 
   public bool MovePendulum()
   {
-    float l = Mathf.Abs(alpha - startAlpha) * rPendulum;
+    float distCovered = Mathf.Abs(alpha - startAlpha) * rPendulum;
     // Move the disks towards each other
-    discTransL.position = centerPos + (new Vector3(Mathf.Sin(alpha), Mathf.Cos(alpha), 0f) * rPendulum);
-    discTransR.position = centerPos + (new Vector3(Mathf.Sin(beta), Mathf.Cos(beta), 0f) * rPendulum);
+    discTransR.position = centerPos.position + (new Vector3(Mathf.Sin(alpha), Mathf.Cos(alpha), 0f) * rPendulum);
+    discTransL.position = centerPos.position + (new Vector3(Mathf.Sin(beta), Mathf.Cos(beta), 0f) * rPendulum);
     alphaAcc = (gravity / rPendulum) * Mathf.Sin(alpha);
     alphaVel += alphaAcc * (Time.time - startTime);
     alpha += Time.deltaTime * alphaVel;
@@ -198,7 +202,7 @@ public class MoveHandler : MonoBehaviour
     beta += Time.deltaTime * betaVel;
 
     // Subtract 5 since dt isn't small enough in real time
-    if (l >= pendulumSoundOffset && !hasPlayedSound && soundTiming != "none")
+    if (distCovered >= pendulumSoundOffset && !hasPlayedSound && soundTiming != "none")
     {
       hasPlayedSound = true;
       if (soundTiming == "after")
@@ -211,14 +215,17 @@ public class MoveHandler : MonoBehaviour
       }
     }
 
+    // Debug.Log("Dist travel: " + distCovered + " " + (Time.time - startTime));
     // Always at coincidence!
-    float offset = 2;
-    if (l >= (travelDistPendulum / 2) - offset && !hasPausedTime)
+    float offset = -2.5f;
+    if (distCovered >= (travelDistPendulum / 2) + offset && !hasPausedTime)
     {
+      // Debug.Log("Dist travel: " + distCovered + " " + (Time.time - startTime) + " FREEZE!!!!!!!!!!!!!!!!!!!!!!! ");
+      // Time.timeScale = 0;
       StartCoroutine(FramePause());
       hasPausedTime = true;
     }
-    return l >= 105;
+    return distCovered >= travelDistPendulum * 0.8;
   }
 
   // Pause the movement for the given time

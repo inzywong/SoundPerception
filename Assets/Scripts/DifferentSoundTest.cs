@@ -84,7 +84,7 @@ public class DifferentSoundTest : MonoBehaviour
     if (newTest[0] == "before") answer[0] = "1";
     if (newTest[0] == "at") answer[0] = "2";
     if (newTest[0] == "after") answer[0] = "3";
-    answer[1] = soundOffset.ToString();
+    answer[1] = pauseTime.ToString();
     int soundIndex = Int32.Parse(newTest[1]);
     answer[2] = bounceSounds[soundIndex].name;
     answer[3] = "1";
