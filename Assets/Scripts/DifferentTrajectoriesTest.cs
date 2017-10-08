@@ -16,16 +16,27 @@ public class DifferentTrajectoriesTest : MonoBehaviour
   public float pauseTime;
   [Header("Sound")]
   public AudioClip bounceSound;
+  [Header("Trajectories to use")]
+  public bool horizontal;
+  public bool cross;
+  public bool pendulum;
 
   private bool doneWithTest = true;
   private MoveHandler moveHandler;
   private List<List<string>> testOrder = new List<List<string>>();
   private List<string[]> results = new List<string[]>();
-  private string[] trajectories = new string[] { "Cross", "Pendulum" }; // 1 = cross, 2 = pendulum
+  private List<string> trajectories = new List<string>(); // 1 = cross, 2 = pendulum
 
   void Awake()
   {
     moveHandler = GetComponent<MoveHandler>();
+  }
+
+  void Start()
+  {
+    if (horizontal) trajectories.Add("Horizontal");
+    if (cross) trajectories.Add("Cross");
+    if (pendulum) trajectories.Add("Pendulum");
   }
 
   public IEnumerator StartTest(System.Action<List<string[]>> result)
@@ -124,10 +135,10 @@ public class DifferentTrajectoriesTest : MonoBehaviour
       original.RemoveAt(randomIndex);
 
       // Create 3 different tests, one for each "sound" to use. "i" is the index in the sounds array.
-      for (int i = 0; i < trajectories.Length; i++)
+      for (int i = 0; i < trajectories.Count; i++)
       {
-        List<string> sound = new List<string> { timing, trajectories[i] };
-        almostScrambled.Add(sound);
+        List<string> trajec = new List<string> { timing, trajectories[i] };
+        almostScrambled.Add(trajec);
       }
     }
 

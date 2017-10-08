@@ -101,7 +101,8 @@ public class FrameStopTest : MonoBehaviour
   // TODO: include framestop
   public List<List<string>> RandomizeTests()
   {
-    List<string> tests = new List<string> { "at", "before", "after", "none" };
+    // List<string> tests = new List<string> { "at", "before", "after", "none" };
+    List<string> tests = new List<string> { "at", "before" };
     List<List<string>> randomTests = Scramble(tests);
     return randomTests;
   }
