@@ -102,8 +102,8 @@ public class MoveHandler : MonoBehaviour
       }
       else if (traject == "Cross")
       {
-        endLeft = new Vector3(startRight.x, startRight.y - startRight.x);
-        endRight = new Vector3(startLeft.x, startLeft.y - startRight.x);
+        endLeft = new Vector3(startRight.x, startRight.y - startRight.x * 0.5f);
+        endRight = new Vector3(startLeft.x, startLeft.y - startRight.x * 0.5f);
         // Adjustments to make them coincide exactly
         startLeft = new Vector3(-69.1f, 0, 0);
         startRight = new Vector3(70, 0, 0);
